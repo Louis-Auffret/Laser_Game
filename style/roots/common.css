@@ -1,0 +1,20 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    color: var(--color-primary);
+    font-size: 24px;
+}
+
+html,
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+body {
+    background-color: var(--color-secondary);
+    display: flex;
+    flex-direction: column;
+}
