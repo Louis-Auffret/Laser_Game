@@ -36,7 +36,7 @@ function fetchPlayers() {
         });
 }
 
-// Fonction pour récupérer et afficher les équipes et joueurs d'une ligue
+//------------------------------------------------------------------------------------------
 function filterLeague(leagueId) {
     const teamListDiv = document.getElementById("teamList");
     teamListDiv.innerHTML = ""; // Réinitialiser la liste des équipes
@@ -55,22 +55,65 @@ function filterLeague(leagueId) {
     fetch(`http://localhost:3000/players/league/${leagueId}`)
         .then((response) => response.json())
         .then((teams) => {
+            // Trier les équipes par teamScore (teamPoints) de manière décroissante
+            teams.sort((a, b) => {
+                const scoreA = a.victories * 2 + a.draws;
+                const scoreB = b.victories * 2 + b.draws;
+                return scoreB - scoreA;
+            });
+
             teams.forEach((team) => {
                 const teamDiv = document.createElement("div");
                 teamDiv.classList.add("team");
-                teamDiv.innerHTML = `<strong>${team.team_name}</strong>`; // Afficher le nom de l'équipe
+
+                // Calcul du score total des joueurs de l'équipe
+                const totalScore = team.players.reduce((total, player) => {
+                    return total + (player.donnees - player.recues);
+                }, 0); // Somme des scores des joueurs (donnees - recues)
+                const teamPoints = team.victories * 2 + team.draws;
+                const totalDonnees = team.players.reduce((total, player) => total + player.donnees, 0);
+                const totalRecues = team.players.reduce((total, player) => total + player.recues, 0);
+
+                // Affichage du nom de l'équipe et de son score venant de SEASONS
+                teamDiv.innerHTML = `
+                    <strong class="team-name">${team.team_name}</strong> 
+                    <span class="team-points">${teamPoints}<span class="light">pts</span></span>
+                    <span class="filler">|</span>
+                    <span class="team-victories">${team.victories}</span>
+                    <span class="team-defeats">${team.defeats}</span>
+                    <span class="team-draws">${team.draws}</span>
+                    <span class="filler">|</span>
+                    <span class="team-score">${totalScore}</span>
+                    <span class="team-donnees">${totalDonnees}</span>
+                    <span class="team-recues">${totalRecues}</span>`;
 
                 // Créer un volet pour afficher les joueurs
                 const playerListDiv = document.createElement("div");
                 playerListDiv.classList.add("player-list");
                 playerListDiv.style.display = "none"; // Initialement masqué
 
-                team.players.forEach((player) => {
-                    const playerDiv = document.createElement("div");
-                    playerDiv.classList.add("player");
-                    playerDiv.textContent = player.player_name;
-                    playerListDiv.appendChild(playerDiv);
-                });
+                // Ajouter les joueurs dans le volet
+                if (team.players && team.players.length > 0) {
+                    team.players.forEach((player) => {
+                        const playerDiv = document.createElement("div");
+                        playerDiv.classList.add("player");
+
+                        // Afficher le nom du joueur et son score
+                        playerDiv.innerHTML = `<span>${player.player_name}</span> 
+                                               <span class="score">${player.donnees - player.recues}</span> 
+                                               <span class="donnees">${player.donnees}</span> 
+                                               <span class="recues">${player.recues}</span> 
+                                               <span class="rank_mvp"></span> 
+                                               <span class="rank_atq"></span> 
+                                               <span class="rank_def"></span>`;
+
+                        playerListDiv.appendChild(playerDiv);
+                    });
+                } else {
+                    const noPlayersMessage = document.createElement("div");
+                    noPlayersMessage.innerText = "Aucun joueur disponible";
+                    playerListDiv.appendChild(noPlayersMessage);
+                }
 
                 // Ajouter la gestion du clic pour afficher/masquer les joueurs
                 teamDiv.onclick = function () {
@@ -85,12 +128,12 @@ function filterLeague(leagueId) {
         .catch((error) => console.error("Erreur:", error));
 }
 
+//* ------------------------------------------------------------------------------------------
 function goBackOnClick() {
     if (window.history.length > 1) {
         window.history.back();
     } else {
         console.warn("Aucune page précédente dans l'historique !");
-        // Optionnel : Redirigez vers une autre page si nécessaire
-        // window.location.href = "https://example.com";
+        // window.location.href = "https://example.com"; //Optionnel, rediriger vers un lien
     }
 }
