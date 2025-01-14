@@ -94,7 +94,11 @@ button.filter:hover {
   flex: 1;
   text-align: center;
 }
-#heading span:nth-child(1), #heading span:nth-child(2), #heading span:nth-child(3), #heading span:nth-child(7) {
+#heading span:nth-child(2) {
+  text-align: left;
+  flex: 3;
+}
+#heading span:nth-child(4), #heading span:nth-child(8) {
   flex: 2;
 }
 
@@ -113,6 +117,10 @@ button.filter:hover {
   width: 100%;
   height: 50px;
 }
+#teamList .team:hover {
+  cursor: pointer;
+  background-color: rgba(237, 214, 167, 0.1019607843);
+}
 #teamList .team span {
   text-align: center;
 }
@@ -120,14 +128,13 @@ button.filter:hover {
   flex: 2;
 }
 #teamList .team .team-name {
-  flex: 2;
+  flex: 3;
 }
-#teamList .team:hover {
-  cursor: pointer;
-  background-color: rgba(237, 214, 167, 0.1019607843);
+#teamList .team .team-rank {
+  flex: 1;
 }
 #teamList .team .team-points {
-  flex: 2;
+  flex: 1;
 }
 #teamList .team .team-points .light {
   font-size: 18px;

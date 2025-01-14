@@ -62,6 +62,11 @@ function filterLeague(leagueId) {
                 return scoreB - scoreA;
             });
 
+            // Calculer le rang de chaque équipe après le tri
+            teams.forEach((team, index) => {
+                team.rank = index + 1; // Le rang commence à 1
+            });
+
             teams.forEach((team) => {
                 const teamDiv = document.createElement("div");
                 teamDiv.classList.add("team");
@@ -76,6 +81,7 @@ function filterLeague(leagueId) {
 
                 // Affichage du nom de l'équipe et de son score venant de SEASONS
                 teamDiv.innerHTML = `
+                    <span class="team-rank">#${team.rank}</span>
                     <strong class="team-name">${team.team_name}</strong> 
                     <span class="team-points">${teamPoints}<span class="light">pts</span></span>
                     <span class="filler">|</span>
