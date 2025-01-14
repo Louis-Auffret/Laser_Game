@@ -1,0 +1,110 @@
+#back {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  padding: 20px;
+  border: 1px solid var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#back:hover {
+  cursor: pointer;
+  background-color: rgba(237, 214, 167, 0.1019607843);
+}
+
+input {
+  color: var(--color-secondary);
+}
+
+button.default {
+  background-color: var(--color-tertiary);
+  color: var(--color-secondary);
+  border: none;
+  padding: 6px 24px;
+  border-radius: 6px;
+}
+button.default:hover {
+  cursor: pointer;
+  background-color: var(--color-tertiary-dark);
+  font-style: italic;
+}
+
+button.filter {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  padding: 6px 24px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+}
+button.filter:focus {
+  outline: none;
+  background-color: var(--color-primary-bis);
+  color: var(--color-secondary);
+}
+button.filter:hover {
+  cursor: pointer;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+}
+
+#filter_leagues {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 24px;
+  padding: 60px;
+}
+#filter_leagues input[type=radio] {
+  display: none;
+}
+#filter_leagues .active {
+  outline: none;
+  background-color: var(--color-primary-bis);
+  color: var(--color-secondary);
+  border: none;
+  box-shadow: 0px 0px 3px 0, 0, 0, 0.9;
+}
+#filter_leagues label {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  padding: 6px 24px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+}
+#filter_leagues label:hover {
+  cursor: pointer;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+}
+
+#teamList {
+  display: flex;
+  flex-direction: column;
+  padding: 0 120px;
+}
+#teamList .team {
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  padding: 16px 40px;
+}
+#teamList .team:hover {
+  cursor: pointer;
+  background-color: rgba(237, 214, 167, 0.1019607843);
+}
+#teamList .player-list {
+  margin-bottom: 12px;
+}
+#teamList .player-list .player {
+  border: 1px solid var(--color-primary);
+  padding: 4px 32px;
+}
+#teamList .player-list .player:last-of-type {
+  border-radius: 0 0 6px 6px;
+}/*# sourceMappingURL=teams_&_players.css.map */

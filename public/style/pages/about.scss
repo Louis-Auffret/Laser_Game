@@ -9,7 +9,8 @@
     #description {
         padding: 24px;
 
-        p {
+        p,
+        li {
             a {
                 &:hover {
                     color: var(--color-tertiary);

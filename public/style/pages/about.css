@@ -7,7 +7,8 @@
 #content #description {
   padding: 24px;
 }
-#content #description p a:hover {
+#content #description p a:hover,
+#content #description li a:hover {
   color: var(--color-tertiary);
 }
 #content #description h2 {

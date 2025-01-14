@@ -1,7 +1,17 @@
 const express = require("express");
-const db = require("../config/database"); // Importe la connexion à la base de données
-
+const db = require("../config/database");
+const path = require("path");
+const cors = require("cors");
 const app = express();
+
+// Activer CORS pour toutes les routes
+app.use(cors());
+
+//Importer Routes :
+const playersRoutes = require("./routes/route_players");
+
+// Servir le fichier HTML statiquement (index.html)
+app.use(express.static(path.join(__dirname, "public")));
 
 // Test de la base de données
 app.get("/laser_game", (req, res) => {
@@ -14,6 +24,9 @@ app.get("/laser_game", (req, res) => {
         res.send(`Connexion réussie ! Heure actuelle de la base : ${results[0].currentTime}`);
     });
 });
+
+// Utiliser les routes des joueurs sous le chemin /players
+app.use("/players", playersRoutes);
 
 // Lancer le serveur
 app.listen(3000, () => {
