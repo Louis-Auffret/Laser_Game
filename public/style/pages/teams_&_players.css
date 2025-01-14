@@ -160,10 +160,14 @@ button.filter:hover {
 }
 #teamList .player-list {
   margin-bottom: 12px;
+  margin-left: 50px;
 }
 #teamList .player-list .player {
   border: 1px solid var(--color-primary);
   padding: 4px 32px;
+}
+#teamList .player-list .player .light {
+  font-weight: 100;
 }
 #teamList .player-list .player:last-of-type {
   border-radius: 0 0 6px 6px;

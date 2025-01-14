@@ -37,6 +37,20 @@ function fetchPlayers() {
 }
 
 //------------------------------------------------------------------------------------------
+// Fonction pour attribuer les rangs avec gestion des égalités
+function assignRanks(sortedPlayers, propertyToCompare, rankProperty) {
+    let currentRank = 1; // Initialisation du rang
+    for (let i = 0; i < sortedPlayers.length; i++) {
+        // Si ce n'est pas le premier joueur et que sa valeur est différente du précédent
+        if (i > 0 && sortedPlayers[i][propertyToCompare] !== sortedPlayers[i - 1][propertyToCompare]) {
+            currentRank = i + 1; // Le rang change selon l'index actuel
+        }
+        // Attribuer le rang à la propriété spécifiée
+        sortedPlayers[i][rankProperty] = currentRank;
+    }
+}
+
+//------------------------------------------------------------------------------------------
 function filterLeague(leagueId) {
     const teamListDiv = document.getElementById("teamList");
     teamListDiv.innerHTML = ""; // Réinitialiser la liste des équipes
@@ -64,9 +78,35 @@ function filterLeague(leagueId) {
 
             // Calculer le rang de chaque équipe après le tri
             teams.forEach((team, index) => {
-                team.rank = index + 1; // Le rang commence à 1
+                team.rank = index + 1;
             });
 
+            // Récupérer tous les joueurs pour créer des classements globaux
+            let allPlayers = [];
+            teams.forEach((team) => {
+                team.players.forEach((player) => {
+                    allPlayers.push(player);
+                });
+            });
+
+            // Calculer un champ temporaire "computedScore" pour chaque joueur
+            allPlayers.forEach((player) => {
+                player.computedScore = player.donnees - player.recues;
+            });
+
+            // Trier les joueurs par computedScore (score) décroissant
+            let scoreRankedPlayers = [...allPlayers].sort((a, b) => b.computedScore - a.computedScore);
+            assignRanks(scoreRankedPlayers, "computedScore", "scoreRank");
+
+            // Trier les joueurs par touches données et attribuer les rangs
+            let donneesRankedPlayers = [...allPlayers].sort((a, b) => b.donnees - a.donnees);
+            assignRanks(donneesRankedPlayers, "donnees", "donneesRank");
+
+            // Trier les joueurs par touches reçues et attribuer les rangs
+            let recuesRankedPlayers = [...allPlayers].sort((a, b) => a.recues - b.recues);
+            assignRanks(recuesRankedPlayers, "recues", "recuesRank");
+
+            // Affichage des équipes et de leurs joueurs
             teams.forEach((team) => {
                 const teamDiv = document.createElement("div");
                 teamDiv.classList.add("team");
@@ -98,28 +138,22 @@ function filterLeague(leagueId) {
                 playerListDiv.classList.add("player-list");
                 playerListDiv.style.display = "none"; // Initialement masqué
 
-                // Ajouter les joueurs dans le volet
-                if (team.players && team.players.length > 0) {
-                    team.players.forEach((player) => {
-                        const playerDiv = document.createElement("div");
-                        playerDiv.classList.add("player");
+                // Ajouter les joueurs dans le volet avec leurs rangs
+                team.players.forEach((player) => {
+                    const playerDiv = document.createElement("div");
+                    playerDiv.classList.add("player");
 
-                        // Afficher le nom du joueur et son score
-                        playerDiv.innerHTML = `<span>${player.player_name}</span> 
-                                               <span class="score">${player.donnees - player.recues}</span> 
-                                               <span class="donnees">${player.donnees}</span> 
-                                               <span class="recues">${player.recues}</span> 
-                                               <span class="rank_mvp"></span> 
-                                               <span class="rank_atq"></span> 
-                                               <span class="rank_def"></span>`;
+                    // Afficher le nom du joueur et son score, ainsi que ses rangs
+                    playerDiv.innerHTML = `<span>${player.player_name}</span> 
+                                           <span class="score">${player.computedScore}</span> 
+                                           <span class="donnees">${player.donnees}</span> 
+                                           <span class="recues">${player.recues}</span> 
+                                           <span class="rank_score"><span class="light">#</span>${player.scoreRank}</span>
+                                           <span class="rank_donnees"><span class="light">#</span>${player.donneesRank}</span>
+                                           <span class="rank_recues"><span class="light">#</span>${player.recuesRank}</span>`;
 
-                        playerListDiv.appendChild(playerDiv);
-                    });
-                } else {
-                    const noPlayersMessage = document.createElement("div");
-                    noPlayersMessage.innerText = "Aucun joueur disponible";
-                    playerListDiv.appendChild(noPlayersMessage);
-                }
+                    playerListDiv.appendChild(playerDiv);
+                });
 
                 // Ajouter la gestion du clic pour afficher/masquer les joueurs
                 teamDiv.onclick = function () {
