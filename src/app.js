@@ -9,6 +9,7 @@ app.use(cors());
 
 //Importer Routes :
 const playersRoutes = require("./routes/route_players");
+const tourneyRoutes = require("./routes/route_tourneys");
 
 // Servir le fichier HTML statiquement (index.html)
 app.use(express.static(path.join(__dirname, "public")));
@@ -25,8 +26,9 @@ app.get("/laser_game", (req, res) => {
     });
 });
 
-// Utiliser les routes des joueurs sous le chemin /players
+// Utiliser les routes
 app.use("/players", playersRoutes);
+app.use("/tourney", tourneyRoutes);
 
 // Lancer le serveur
 app.listen(3000, () => {
