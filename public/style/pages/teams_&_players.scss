@@ -201,10 +201,11 @@ button.default {
         margin-left: 50px;
 
         .player {
-            padding: 6px 32px;
+            padding: 8px 32px;
 
             &:not(:last-child) {
                 border-bottom: 1px solid var(--color-primary);
+                // border-right: 1px solid var(--color-primary);
             }
 
             .light {

@@ -148,7 +148,7 @@ button.default:hover {
   margin-left: 50px;
 }
 #teamList .playerList .player {
-  padding: 6px 32px;
+  padding: 8px 32px;
 }
 #teamList .playerList .player:not(:last-child) {
   border-bottom: 1px solid var(--color-primary);
