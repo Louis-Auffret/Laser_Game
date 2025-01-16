@@ -48,6 +48,7 @@ async function fetchLeaguesBySeason(seasonId) {
         // Ajouter les boutons radio
         leagues.forEach((league) => {
             const label = document.createElement("label");
+            label.classList.add("filter");
             const radio = document.createElement("input");
 
             radio.type = "radio";
@@ -57,6 +58,17 @@ async function fetchLeaguesBySeason(seasonId) {
             label.textContent = league.name;
             label.prepend(radio); // Ajouter le bouton radio avant le texte
 
+            // Gestion de la classe .active
+            radio.addEventListener("change", () => {
+                // Supprime la classe .active de tous les labels
+                document.querySelectorAll("#leagueButtons label").forEach((lbl) => {
+                    lbl.classList.remove("active");
+                });
+
+                // Ajoute la classe .active au label actuel
+                label.classList.add("active");
+            });
+
             leagueButtons.appendChild(label);
         });
     } catch (error) {
@@ -64,9 +76,9 @@ async function fetchLeaguesBySeason(seasonId) {
     }
 }
 
-// Fonction pour récupérer et afficher les équipes d'une ligue et saison données
+// Fonction pour récupérer et afficher les équipes et leurs joueurs d'une ligue donnée
 async function fetchTeamsByLeague(leagueId) {
-    teamList.innerHTML = "";
+    teamList.innerHTML = ""; // Nettoyer la liste des équipes
     try {
         const response = await fetch(`http://localhost:3000/players/teams?leagueId=${leagueId}`);
         if (!response.ok) {
@@ -75,12 +87,39 @@ async function fetchTeamsByLeague(leagueId) {
 
         const teams = await response.json();
 
-        // Ajouter les équipes à la liste
+        // Ajouter les équipes et leurs joueurs à la liste
         teams.forEach((team) => {
             const teamElement = document.createElement("div");
-            teamElement.textContent = team.name;
             teamElement.classList.add("team");
+
+            // Nom de l'équipe
+            const teamName = document.createElement("h3");
+            teamName.textContent = team.name;
+            teamName.classList.add("teamName");
+            teamElement.appendChild(teamName);
+
+            // Ajouter le conteneur de l'équipe au DOM
             teamList.appendChild(teamElement);
+
+            // Liste des joueurs (masquée par défaut)
+            const playerList = document.createElement("div");
+            playerList.classList.add("playerList");
+            playerList.style.display = "none"; // Masquer la liste initialement
+
+            // Ajouter les joueurs à la liste
+            team.players.forEach((player) => {
+                const playerItem = document.createElement("div");
+                playerItem.classList.add("player");
+                playerItem.textContent = player.name;
+                playerList.appendChild(playerItem);
+            });
+
+            teamList.appendChild(playerList);
+
+            // Ajouter un événement pour afficher/masquer les joueurs au clic
+            teamElement.addEventListener("click", () => {
+                playerList.style.display = playerList.style.display === "none" ? "block" : "none";
+            });
         });
     } catch (error) {
         console.error("Erreur :", error);

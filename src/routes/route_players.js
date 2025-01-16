@@ -38,45 +38,49 @@ router.get("/leagues", (req, res) => {
     });
 });
 
-//Route pour récupérer les équipes
+// Route pour récupérer les équipes et leurs joueurs
 router.get("/teams", (req, res) => {
     const { leagueId } = req.query;
 
-    // Récupérer la saison associée à la ligue
-    const querySeasonForLeague = `
-        SELECT season_id
-        FROM LEAGUES
-        WHERE id = ?;
-    `;
-
-    db.query(querySeasonForLeague, [leagueId], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Erreur lors de la récupération de la saison de la ligue");
-        }
-
-        if (results.length === 0) {
-            return res.status(404).send("Ligue non trouvée");
-        }
-
-        const seasonId = results[0].season_id;
-
-        // Maintenant, on peut récupérer les équipes associées à cette ligue et saison
-        const queryTeams = `
-        SELECT t.id, t.name
+    // Requête pour récupérer les équipes et leurs joueurs
+    const queryTeamsWithPlayers = `
+        SELECT 
+            t.id AS team_id, 
+            t.name AS team_name,
+            p.id AS player_id, 
+            p.name AS player_name
         FROM TEAMS t
         INNER JOIN TEAM_SEASONS ts ON t.id = ts.team_id
         INNER JOIN LEAGUES l ON ts.league_id = l.id
-        WHERE l.id = ? AND l.season_id = ?;
+        LEFT JOIN TEAM_PLAYERS tp ON ts.id = tp.team_season_id
+        LEFT JOIN PLAYERS p ON tp.player_id = p.id
+        WHERE l.id = ?;
     `;
 
-        db.query(queryTeams, [leagueId, seasonId], (err, teams) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Erreur lors de la récupération des équipes");
+    db.query(queryTeamsWithPlayers, [leagueId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Erreur lors de la récupération des équipes et des joueurs");
+        }
+
+        // Organiser les données par équipe
+        const teams = results.reduce((acc, row) => {
+            const team = acc.find((t) => t.id === row.team_id);
+            if (team) {
+                if (row.player_id) {
+                    team.players.push({ id: row.player_id, name: row.player_name });
+                }
+            } else {
+                acc.push({
+                    id: row.team_id,
+                    name: row.team_name,
+                    players: row.player_id ? [{ id: row.player_id, name: row.player_name }] : [],
+                });
             }
-            res.json(teams);
-        });
+            return acc;
+        }, []);
+
+        res.json(teams);
     });
 });
 

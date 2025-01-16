@@ -33,25 +33,6 @@ button.default:hover {
   font-style: italic;
 }
 
-button.filter {
-  background-color: var(--color-secondary);
-  color: var(--color-primary);
-  padding: 6px 24px;
-  border: 1px solid var(--color-primary);
-  border-radius: 6px;
-  transition: background-color 0.3s, color 0.3s;
-}
-button.filter:focus {
-  outline: none;
-  background-color: var(--color-primary-bis);
-  color: var(--color-secondary);
-}
-button.filter:hover {
-  cursor: pointer;
-  background-color: var(--color-primary);
-  color: var(--color-secondary);
-}
-
 #seasonSelect {
   width: 200px;
 }
@@ -120,6 +101,7 @@ button.filter:hover {
   align-items: center;
   width: 100%;
   height: 50px;
+  display: flex;
 }
 #teamList .team:hover {
   cursor: pointer;
@@ -162,18 +144,21 @@ button.filter:hover {
 #teamList .team .team-recues {
   flex: 1;
 }
-#teamList .player-list {
+#teamList .playerList {
+  list-style-type: none;
   margin-bottom: 12px;
   margin-left: 50px;
 }
-#teamList .player-list .player {
-  border: 1px solid var(--color-primary);
+#teamList .playerList .player {
   padding: 4px 32px;
 }
-#teamList .player-list .player .light {
+#teamList .playerList .player:not(:last-child) {
+  border-bottom: 1px solid var(--color-primary);
+}
+#teamList .playerList .player .light {
   font-weight: 100;
 }
-#teamList .player-list .player:last-of-type {
+#teamList .playerList .player:last-of-type {
   border-radius: 0 0 6px 6px;
 }
 
