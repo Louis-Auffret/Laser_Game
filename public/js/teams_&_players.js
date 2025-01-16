@@ -106,6 +106,39 @@ async function fetchTeamsByLeague(leagueId) {
             playerList.classList.add("playerList");
             playerList.style.display = "none"; // Masquer la liste initialement
 
+            // Ajouter la section "teamHeading" à playerList
+            const teamHeading = document.createElement("div");
+            teamHeading.classList.add("teamHeading");
+
+            // Liste des textes pour les <span>
+            const spansContent = [
+                "Rang",
+                "Pseudo",
+                "",
+                "Matchs",
+                "V",
+                "D",
+                "E",
+                "",
+                "MVP",
+                "ATQ",
+                "DEF",
+                "",
+                "Score",
+                "Données",
+                "Reçues",
+            ];
+
+            // Créer les <span> et les ajouter à "teamHeading"
+            spansContent.forEach((content) => {
+                const span = document.createElement("span");
+                span.textContent = content; // Ajouter le texte
+                teamHeading.appendChild(span); // Ajouter le <span> au conteneur
+            });
+
+            // Ajouter "teamHeading" à "playerList"
+            playerList.appendChild(teamHeading);
+
             // Ajouter les joueurs à la liste
             team.players.forEach((player) => {
                 const playerItem = document.createElement("div");
@@ -114,6 +147,7 @@ async function fetchTeamsByLeague(leagueId) {
                 playerList.appendChild(playerItem);
             });
 
+            // Ajouter playerList au DOM (après l'équipe)
             teamList.appendChild(playerList);
 
             // Ajouter un événement pour afficher/masquer les joueurs au clic

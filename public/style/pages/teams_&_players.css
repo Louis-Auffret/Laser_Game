@@ -181,6 +181,21 @@ select option:focus {
 #teamList .playerList .player:last-of-type {
   border-radius: 0 0 6px 6px;
 }
+#teamList .playerList .teamHeading {
+  background-color: var(--color-primary);
+  display: flex;
+  padding: 2px 32px;
+}
+#teamList .playerList .teamHeading span {
+  color: var(--color-secondary);
+  font-size: 16px;
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+}
+#teamList .playerList .teamHeading span:nth-child(2) {
+  text-align: left;
+}
 
 #leagueButtons label {
   display: block;

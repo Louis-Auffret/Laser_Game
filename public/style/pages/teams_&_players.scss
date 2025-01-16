@@ -232,6 +232,24 @@ select {
                 border-radius: 0 0 6px 6px;
             }
         }
+
+        .teamHeading {
+            background-color: var(--color-primary);
+            display: flex;
+            padding: 2px 32px;
+
+            span {
+                color: var(--color-secondary);
+                font-size: 16px;
+                text-transform: uppercase;
+                flex: 1;
+                text-align: center;
+
+                &:nth-child(2) {
+                    text-align: left;
+                }
+            }
+        }
     }
 }
 
