@@ -185,6 +185,7 @@ select option:focus {
   background-color: var(--color-primary);
   display: flex;
   padding: 2px 32px;
+  border-radius: 0 6px 0 6px;
 }
 #teamList .playerList .teamHeading span {
   color: var(--color-secondary);

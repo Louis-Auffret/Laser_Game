@@ -237,6 +237,7 @@ select {
             background-color: var(--color-primary);
             display: flex;
             padding: 2px 32px;
+            border-radius: 0 6px 0 6px;
 
             span {
                 color: var(--color-secondary);
