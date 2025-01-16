@@ -39,18 +39,34 @@ button.default {
     width: 200px;
 }
 
-// select {
-//     // appearance: none; /* Masquer la flèche native */
-//     -webkit-appearance: none; /* Pour Safari et Chrome */
-//     -moz-appearance: none; /* Pour Firefox */
-//     background-color: #f4f4f4;
-//     border: 1px solid #ccc;
-//     padding: 10px;
-//     font-size: 16px;
-//     background-image: url("chevron-down.svg"); /* Ajouter une icône personnalisée */
-//     background-repeat: no-repeat;
-//     background-position: right 10px center;
-// }
+select {
+    // appearance: none; /* Masquer la flèche native */
+    // -webkit-appearance: none; /* Pour Safari et Chrome */
+    // -moz-appearance: none; /* Pour Firefox */
+    // background-position: right 10px center;
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    padding: 6px 20px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #edd6a71a;
+    }
+
+    option {
+        background-color: var(--color-primary);
+        color: var(--color-secondary);
+        border-radius: 0px;
+
+        &:hover {
+            background-color: cyan;
+        }
+        &:focus {
+            background-color: cyan;
+        }
+    }
+}
 
 // #leagueButtons {
 //     label.filter {

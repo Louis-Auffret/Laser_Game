@@ -6,7 +6,7 @@ const db = require("../../config/database");
 router.get("/seasons", (req, res) => {
     console.log("Route /SEASONS atteinte !");
     const querySeasons = `
-        SELECT id, year, start_date, end_date 
+        SELECT id, year 
         FROM SEASONS;
     `;
 
