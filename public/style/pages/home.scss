@@ -55,12 +55,12 @@ body {
     #second-row {
         height: 65%;
 
-        .col:first-of-type {
+        .col:last-of-type {
             display: flex;
             flex-direction: column;
             flex: 1;
         }
-        .col:last-of-type {
+        .col:first-of-type {
             flex: 2;
         }
     }

@@ -1,4 +1,4 @@
-// Fonction pour charger les ligues (reste inchangé)
+// Fonction pour charger les ligues
 function loadLeagues() {
     const selectLeague = document.getElementById("selectLeague");
 

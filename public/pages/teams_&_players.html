@@ -8,25 +8,15 @@
         <link rel="stylesheet" href="../style/pages/teams_&_players.css" />
     </head>
     <body>
-        <!-- <h1>Joueurs</h1> -->
-        <div id="back" onclick="goBackOnClick()">&lt;</div>
-        <div id="filter_leagues">
-            <label for="league1">
-                <input type="radio" name="league" id="league1" value="1" onchange="filterLeague(1)" />
-                Ligue Est
-            </label>
-            <label for="league2">
-                <input type="radio" name="league" id="league2" value="2" onchange="filterLeague(2)" />
-                Ligue Nord
-            </label>
-            <label for="league3">
-                <input type="radio" name="league" id="league3" value="3" onchange="filterLeague(3)" />
-                Ligue 1 IDF
-            </label>
-            <label for="league4">
-                <input type="radio" name="league" id="league4" value="4" onchange="filterLeague(4)" />
-                Ligue 2 IDF
-            </label>
+        <!-- Sélecteur de Saison -->
+        <label for="seasonSelect">Sélectionnez une Saison:</label>
+        <select id="seasonSelect">
+            <!-- Options ajoutées dynamiquement ici -->
+        </select>
+
+        <!-- Boutons des Ligues -->
+        <div id="leagueButtons">
+            <!-- Ligues ajoutées dynamiquement ici -->
         </div>
 
         <div id="heading">
@@ -42,9 +32,17 @@
             <span>Données</span>
             <span>Reçues</span>
         </div>
-        <!-- Liste des équipes -->
-        <div id="teamList" class="team-list"></div>
 
-        <script src="../js/players.js"></script>
+        <!-- Liste des Équipes -->
+        <div id="teamList">
+            <!-- Équipes ajoutées dynamiquement ici -->
+        </div>
+
+        <!-- Liste des Joueurs -->
+        <div id="playerList">
+            <!-- Joueurs ajoutés dynamiquement ici -->
+        </div>
+
+        <script src="../js/teams_&_players.js"></script>
     </body>
 </html>

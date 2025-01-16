@@ -51,12 +51,12 @@ body {
 #content #second-row {
   height: 65%;
 }
-#content #second-row .col:first-of-type {
+#content #second-row .col:last-of-type {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
-#content #second-row .col:last-of-type {
+#content #second-row .col:first-of-type {
   flex: 2;
 }
 #content #second-row .col:first-of-type {
