@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin</title>
+        <link rel="stylesheet" href="../style/main.css" />
+        <link rel="stylesheet" href="../style/pages/admin.css" />
+    </head>
+    <body>
+        <h1>Admin</h1>
+
+        <form id="add-player-form">
+            <label for="name">Joueur :</label>
+            <input type="text" name="name" placeholder="Pseudo" required />
+            <input type="text" name="firstname" placeholder="Prénom" required />
+            <input type="text" name="lastname" placeholder="Nom" required />
+            <button type="submit">Ajouter le joueur</button>
+        </form>
+
+        <form id="add-team-form">
+            <label for="name">Équipe :</label>
+            <input type="text" id="name" name="name" placeholder="Nom de l'équipe" required />
+            <button type="submit">Ajouter l'équipe</button>
+        </form>
+
+        <form id="assign-team-form">
+            <label for="team">Choisissez une équipe :</label>
+            <select id="team" name="team" required>
+                <!-- Les équipes seront injectées ici avec JavaScript -->
+            </select>
+
+            <label for="league">Choisissez une ligue :</label>
+            <select id="league" name="league" required>
+                <!-- Les ligues seront injectées ici avec JavaScript -->
+            </select>
+
+            <button type="submit">Attribuer l'équipe à la ligue</button>
+        </form>
+
+        <script src="../js/admin.js"></script>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+alert {
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+}/*# sourceMappingURL=admin.css.map */
