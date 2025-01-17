@@ -175,4 +175,37 @@ router.get("/teams-by-league", (req, res) => {
     });
 });
 
+// Route pour supprimer l'association d'une équipe à une ligue
+router.post("/remove-team", (req, res) => {
+    const { league_id, team_id } = req.body;
+
+    if (!league_id || !team_id) {
+        return res.status(400).send("L'ID de la ligue et de l'équipe sont requis.");
+    }
+
+    console.log("Suppression de l'association pour team_id:", team_id, "et league_id:", league_id);
+
+    // Supprimer l'association dans la table TEAM_SEASONS
+    const queryDeleteAssociation = `
+        DELETE FROM TEAM_SEASONS 
+        WHERE team_id = ? AND league_id = ?;
+    `;
+
+    db.query(queryDeleteAssociation, [team_id, league_id], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la suppression de l'association :", err);
+            return res.status(500).send("Erreur serveur lors de la suppression de l'association.");
+        }
+
+        console.log("Résultat de la requête SQL:", result);
+
+        if (result.affectedRows === 0) {
+            console.log("Aucune association trouvée pour cette équipe et cette ligue.");
+            return res.status(404).send("Aucune association trouvée pour cette équipe et cette ligue.");
+        }
+
+        res.status(200).send("Association supprimée avec succès !");
+    });
+});
+
 module.exports = router;

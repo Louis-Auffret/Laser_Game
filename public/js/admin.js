@@ -145,6 +145,16 @@ document.getElementById("assign-team-form").addEventListener("submit", async (e)
 
         if (response.ok) {
             alert("Équipe attribuée à la ligue avec succès !");
+
+            // Après l'assignation, on met à jour le select des équipes
+            const teamSelectAssign = document.getElementById("team-assign");
+
+            // Supprimer l'option de l'équipe assignée
+            const teamOptions = Array.from(teamSelectAssign.options);
+            const teamOptionToRemove = teamOptions.find((option) => option.value === teamId);
+            if (teamOptionToRemove) {
+                teamSelectAssign.removeChild(teamOptionToRemove);
+            }
         } else {
             const errorMessage = await response.text();
             alert(errorMessage); // Afficher l'erreur du serveur
@@ -152,37 +162,6 @@ document.getElementById("assign-team-form").addEventListener("submit", async (e)
     } catch (error) {
         console.error("Erreur lors de l'assignation de l'équipe :", error);
         alert("Erreur lors de l'assignation de l'équipe.");
-    }
-});
-
-// Fonction pour ajouter un joueur à une équipe dans une saison
-document.getElementById("add-player-to-team-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const playerId = formData.get("player");
-    const teamSeasonId = formData.get("team-season");
-
-    try {
-        const response = await fetch("http://localhost:3000/admin/team-players", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                player_id: playerId,
-                team_season_id: teamSeasonId,
-            }),
-        });
-
-        if (response.ok) {
-            alert("Joueur ajouté à l'équipe avec succès !");
-            e.target.reset(); // Réinitialiser le formulaire
-        } else {
-            const errorMessage = await response.text(); // Récupère le message d'erreur du serveur
-            alert(errorMessage); // Affiche le message d'erreur spécifique
-        }
-    } catch (error) {
-        console.error("Erreur lors de l'ajout du joueur à l'équipe :", error);
-        alert("Erreur lors de l'ajout du joueur.");
     }
 });
 
@@ -219,4 +198,40 @@ document.addEventListener("DOMContentLoaded", async () => {
             teamSeasonSelect.appendChild(option);
         });
     });
+});
+
+// Fonction pour supprimer l'association équipe-ligue
+document.getElementById("remove-team-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const leagueId = document.getElementById("league-remove").value;
+    const teamId = document.getElementById("team-remove").value;
+
+    // Vérifiez si une ligue et une équipe ont été sélectionnées
+    if (!leagueId || !teamId) {
+        alert("Veuillez sélectionner une ligue et une équipe.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/admin/remove-team", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ league_id: leagueId, team_id: teamId }),
+        });
+
+        const responseText = await response.text();
+
+        if (response.ok) {
+            alert("Association supprimée avec succès !");
+            console.log("Réponse du serveur:", responseText);
+            // Réinitialiser les formulaires ou effectuer des actions après la suppression
+            document.getElementById("remove-team-form").reset();
+        } else {
+            alert("Erreur : " + responseText);
+        }
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'association :", error);
+        alert("Erreur lors de la suppression de l'association.");
+    }
 });
