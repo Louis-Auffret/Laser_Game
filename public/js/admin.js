@@ -58,11 +58,11 @@ document.getElementById("add-team-form").addEventListener("submit", async (e) =>
     }
 });
 
-// Lors du chargement du DOM, remplir les listes des équipes et ligues
+// Fonction pour remplir les selects des équipes et ligues
 document.addEventListener("DOMContentLoaded", async () => {
     // Récupérer la liste des équipes et ligues depuis le serveur
     const [teamsResponse, leaguesResponse] = await Promise.all([
-        fetch("http://localhost:3000/admin/teams"), // Cette route récupère maintenant les équipes non assignées
+        fetch("http://localhost:3000/admin/teams"),
         fetch("http://localhost:3000/admin/leagues"),
     ]);
 
@@ -165,41 +165,6 @@ document.getElementById("assign-team-form").addEventListener("submit", async (e)
     }
 });
 
-// Lors du chargement du DOM, remplir les listes des équipes et des joueurs
-document.addEventListener("DOMContentLoaded", async () => {
-    // Récupérer la liste des équipes et ligues depuis le serveur
-    const [teamsResponse, playersResponse, seasonsResponse] = await Promise.all([
-        fetch("http://localhost:3000/admin/teams"),
-        fetch("http://localhost:3000/admin/players"),
-        fetch("http://localhost:3000/admin/seasons"),
-    ]);
-
-    const teams = await teamsResponse.json();
-    const players = await playersResponse.json();
-    const seasons = await seasonsResponse.json();
-
-    // Peupler le select des joueurs
-    const playerSelect = document.getElementById("player");
-    players.forEach((player) => {
-        const option = document.createElement("option");
-        option.value = player.id;
-        option.textContent = `${player.firstname} ${player.lastname}`;
-        playerSelect.appendChild(option);
-    });
-
-    // Peupler le select des équipes par saison
-    const teamSeasonSelect = document.getElementById("team-season");
-    teams.forEach((team) => {
-        // Associer chaque équipe à une saison spécifique
-        seasons.forEach((season) => {
-            const option = document.createElement("option");
-            option.value = `${team.id}_${season.id}`; // Format: team_id_season_id
-            option.textContent = `${team.name} - Saison ${season.year}`;
-            teamSeasonSelect.appendChild(option);
-        });
-    });
-});
-
 // Fonction pour supprimer l'association équipe-ligue
 document.getElementById("remove-team-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -225,8 +190,9 @@ document.getElementById("remove-team-form").addEventListener("submit", async (e)
         if (response.ok) {
             alert("Association supprimée avec succès !");
             console.log("Réponse du serveur:", responseText);
-            // Réinitialiser les formulaires ou effectuer des actions après la suppression
-            document.getElementById("remove-team-form").reset();
+
+            // Mettre à jour les deux selects (team-assign et team-remove) après la suppression
+            await updateTeamSelectsAfterRemoval(leagueId);
         } else {
             alert("Erreur : " + responseText);
         }
@@ -235,3 +201,40 @@ document.getElementById("remove-team-form").addEventListener("submit", async (e)
         alert("Erreur lors de la suppression de l'association.");
     }
 });
+
+// Fonction pour mettre à jour les selects #team-assign et #team-remove après suppression
+async function updateTeamSelectsAfterRemoval(leagueId) {
+    // Mise à jour du select des équipes à assigner (team-assign)
+    const teamSelectAssign = document.getElementById("team-assign");
+    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
+    const teams = await teamsResponse.json();
+
+    // Vider le select des équipes
+    teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
+
+    // Ajouter les équipes au select #team-assign
+    teams.forEach((team) => {
+        const option = document.createElement("option");
+        option.value = team.id;
+        option.textContent = team.name;
+        teamSelectAssign.appendChild(option);
+    });
+
+    // Mise à jour du select des équipes à supprimer (team-remove)
+    const teamSelectRemove = document.getElementById("team-remove");
+
+    // Récupérer les équipes associées à la ligue sélectionnée pour suppression
+    const response = await fetch(`http://localhost:3000/admin/teams-by-league?leagueId=${leagueId}`);
+    const teamsInLeague = await response.json();
+
+    // Vider le select des équipes
+    teamSelectRemove.innerHTML = "<option value=''>Sélectionner une équipe</option>"; // Remettre l'option par défaut
+
+    // Ajouter les équipes restantes dans le select #team-remove
+    teamsInLeague.forEach((team) => {
+        const option = document.createElement("option");
+        option.value = team.id;
+        option.textContent = team.name;
+        teamSelectRemove.appendChild(option);
+    });
+}
