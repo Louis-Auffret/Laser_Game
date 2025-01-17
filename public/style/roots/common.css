@@ -44,3 +44,56 @@ body {
 ::-webkit-scrollbar-corner {
     background-color: var(--color-primary);
 }
+
+select {
+    /* appearance: none;  */
+    /* -webkit-appearance: none;  */
+    /* -moz-appearance: none;  */
+    /* background-position: right 10px center; */
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background-color 300ms;
+}
+
+select:hover {
+    background-color: var(--color-primary-hover);
+}
+
+option {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border-radius: 0px;
+}
+
+input {
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    padding: 6px 16px;
+    transition: background-color 300ms;
+}
+
+input:hover {
+    background-color: var(--color-primary-hover);
+}
+
+input:focus {
+    background-color: var(--color-primary-focus);
+}
+
+button {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background-color 300ms;
+}
+
+button:hover {
+    background-color: var(--color-primary-bis);
+}
