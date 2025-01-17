@@ -78,16 +78,21 @@ router.post("/teams", (req, res) => {
     });
 });
 
-// Route pour récupérer les équipes
+// Route pour récupérer les équipes qui ne sont pas encore associées à une ligue
 router.get("/teams", (req, res) => {
-    const queryTeams = "SELECT id, name FROM TEAMS";
+    const queryTeams = `
+        SELECT t.id, t.name 
+        FROM TEAMS t
+        LEFT JOIN TEAM_SEASONS ts ON t.id = ts.team_id
+        WHERE ts.team_id IS NULL
+    `;
 
     db.query(queryTeams, (err, teams) => {
         if (err) {
             console.error("Erreur lors de la récupération des équipes :", err);
             return res.status(500).send("Erreur serveur lors de la récupération des équipes.");
         }
-        res.json(teams);
+        res.json(teams); // Retourne seulement les équipes non associées à une ligue
     });
 });
 

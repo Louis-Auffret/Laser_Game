@@ -62,7 +62,7 @@ document.getElementById("add-team-form").addEventListener("submit", async (e) =>
 document.addEventListener("DOMContentLoaded", async () => {
     // Récupérer la liste des équipes et ligues depuis le serveur
     const [teamsResponse, leaguesResponse] = await Promise.all([
-        fetch("http://localhost:3000/admin/teams"),
+        fetch("http://localhost:3000/admin/teams"), // Cette route récupère maintenant les équipes non assignées
         fetch("http://localhost:3000/admin/leagues"),
     ]);
 
@@ -127,20 +127,31 @@ document.getElementById("league-remove").addEventListener("change", async (e) =>
 document.getElementById("assign-team-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const teamId = document.getElementById("team-assign").value;
-    const leagueId = document.getElementById("league-assign").value;
+    const teamId = document.getElementById("team-assign").value; // Utilisation de l'élément avec id "team-assign"
+    const leagueId = document.getElementById("league-assign").value; // Utilisation de l'élément avec id "league-assign"
 
-    const response = await fetch("http://localhost:3000/admin/assign-team", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ team_id: teamId, league_id: leagueId }),
-    });
+    // Assurez-vous que teamId et leagueId ne sont pas vides
+    if (!teamId || !leagueId) {
+        alert("Veuillez sélectionner une équipe et une ligue.");
+        return;
+    }
 
-    if (response.ok) {
-        alert("Équipe attribuée à la ligue avec succès !");
-    } else {
-        const errorMessage = await response.text();
-        alert(errorMessage); // Afficher l'erreur du serveur
+    try {
+        const response = await fetch("http://localhost:3000/admin/assign-team", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ team_id: teamId, league_id: leagueId }),
+        });
+
+        if (response.ok) {
+            alert("Équipe attribuée à la ligue avec succès !");
+        } else {
+            const errorMessage = await response.text();
+            alert(errorMessage); // Afficher l'erreur du serveur
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'assignation de l'équipe :", error);
+        alert("Erreur lors de l'assignation de l'équipe.");
     }
 });
 
@@ -166,8 +177,8 @@ document.getElementById("add-player-to-team-form").addEventListener("submit", as
             alert("Joueur ajouté à l'équipe avec succès !");
             e.target.reset(); // Réinitialiser le formulaire
         } else {
-            const errorMessage = await response.text(); // Récupérer le message d'erreur du serveur
-            alert(errorMessage); // Afficher le message d'erreur spécifique
+            const errorMessage = await response.text(); // Récupère le message d'erreur du serveur
+            alert(errorMessage); // Affiche le message d'erreur spécifique
         }
     } catch (error) {
         console.error("Erreur lors de l'ajout du joueur à l'équipe :", error);
