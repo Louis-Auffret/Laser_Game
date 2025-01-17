@@ -206,7 +206,7 @@ document.getElementById("remove-team-form").addEventListener("submit", async (e)
 async function updateTeamSelectsAfterRemoval(leagueId) {
     // Mise à jour du select des équipes à assigner (team-assign)
     const teamSelectAssign = document.getElementById("team-assign");
-    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
+    const teamsResponse = await fetch("http://localhost:3000/admin/all-teams");
     const teams = await teamsResponse.json();
 
     // Vider le select des équipes
@@ -218,6 +218,7 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
         option.value = team.id;
         option.textContent = team.name;
         teamSelectAssign.appendChild(option);
+        teamSelectAssign.appendChild(option.cloneNode(true));
     });
 
     // Mise à jour du select des équipes à supprimer (team-remove)
@@ -238,3 +239,167 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
         teamSelectRemove.appendChild(option);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const assignPlayerForm = document.getElementById("assign-player-form");
+    const removePlayerForm = document.getElementById("remove-player-form");
+
+    // Fonction pour récupérer les équipes
+    function fetchTeams() {
+        fetch("http://localhost:3000/admin/all-teams")
+            .then((response) => response.json())
+            .then((teams) => {
+                const teamSelectAssign = document.getElementById("team-assign-player");
+                const teamSelectRemove = document.getElementById("team-remove-player");
+
+                // Vider les options existantes
+                teamSelectAssign.innerHTML = '<option value="">Sélectionner une équipe</option>';
+                teamSelectRemove.innerHTML = '<option value="">Sélectionner une équipe</option>';
+
+                // Remplir les options avec les nouvelles équipes
+                teams.forEach((team) => {
+                    const optionAssign = document.createElement("option");
+                    optionAssign.value = team.id;
+                    optionAssign.textContent = team.name;
+                    teamSelectAssign.appendChild(optionAssign);
+
+                    const optionRemove = document.createElement("option");
+                    optionRemove.value = team.id;
+                    optionRemove.textContent = team.name;
+                    teamSelectRemove.appendChild(optionRemove);
+                });
+            })
+            .catch((err) => console.error("Erreur lors de la récupération des équipes :", err));
+    }
+
+    // Fonction pour récupérer tous les joueurs (pour le select assign-player)
+    function fetchAllPlayers() {
+        fetch("http://localhost:3000/admin/all-players")
+            .then((response) => response.json())
+            .then((players) => {
+                const playerAssignSelect = document.getElementById("player-assign");
+
+                // Effacer les anciennes options
+                playerAssignSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+
+                // Ajouter les joueurs dans la sélection
+                players.forEach((player) => {
+                    const option = document.createElement("option");
+                    option.value = player.id;
+                    option.textContent = `${player.name} (${player.firstname} ${player.lastname})`;
+                    playerAssignSelect.appendChild(option);
+                });
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la récupération des joueurs :", error);
+            });
+    }
+
+    // Fonction pour récupérer les joueurs d'une équipe spécifique (pour le select remove-player)
+    function fetchPlayersByTeam(teamId) {
+        if (!teamId) {
+            document.getElementById("player-remove").innerHTML = '<option value="">Sélectionner un joueur</option>';
+            return; // Si aucune équipe n'est sélectionnée, on ne fait rien
+        }
+
+        fetch(`http://localhost:3000/admin/players-by-team?teamId=${teamId}`)
+            .then((response) => response.json())
+            .then((players) => {
+                const playerRemoveSelect = document.getElementById("player-remove");
+
+                // Effacer les anciennes options
+                playerRemoveSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+
+                // Ajouter les joueurs dans la sélection
+                players.forEach((player) => {
+                    const option = document.createElement("option");
+                    option.value = player.id;
+                    option.textContent = `${player.firstname} ${player.lastname} (${player.name})`;
+                    playerRemoveSelect.appendChild(option);
+                });
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la récupération des joueurs de l'équipe :", error);
+            });
+    }
+
+    // Fonction pour assigner un joueur à une équipe
+    function assignPlayerToTeam(event) {
+        event.preventDefault();
+
+        const teamId = document.getElementById("team-assign-player").value;
+        const playerId = document.getElementById("player-assign").value;
+
+        if (!teamId || !playerId) {
+            alert("Veuillez sélectionner une équipe et un joueur.");
+            return;
+        }
+
+        fetch("http://localhost:3000/admin/assign-player", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ team_id: teamId, player_id: playerId }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Le joueur a été ajouté à l'équipe !");
+                    assignPlayerForm.reset(); // Réinitialiser le formulaire
+                } else {
+                    response.text().then((message) => alert(message));
+                }
+            })
+            .catch((err) => {
+                console.error("Erreur lors de l'assignation du joueur :", err);
+                alert("Une erreur est survenue.");
+            });
+    }
+
+    // Fonction pour supprimer un joueur d'une équipe
+    function removePlayerFromTeam(event) {
+        event.preventDefault();
+
+        const teamId = document.getElementById("team-remove-player").value;
+        const playerId = document.getElementById("player-remove").value;
+
+        if (!teamId || !playerId) {
+            alert("Veuillez sélectionner une équipe et un joueur.");
+            return;
+        }
+
+        fetch("http://localhost:3000/admin/remove-player", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ team_id: teamId, player_id: playerId }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Le joueur a été supprimé de l'équipe !");
+                    removePlayerForm.reset(); // Réinitialiser le formulaire
+                } else {
+                    response.text().then((message) => alert(message));
+                }
+            })
+            .catch((err) => {
+                console.error("Erreur lors de la suppression du joueur :", err);
+                alert("Une erreur est survenue.");
+            });
+    }
+
+    // Ajouter des écouteurs d'événements aux formulaires
+    assignPlayerForm.addEventListener("submit", assignPlayerToTeam);
+    removePlayerForm.addEventListener("submit", removePlayerFromTeam);
+
+    // Appel de fetchTeams pour récupérer les équipes et fetchAllPlayers pour récupérer tous les joueurs
+    fetchTeams();
+    fetchAllPlayers();
+
+    // Écouteur d'événements pour la sélection d'équipe dans le formulaire de suppression
+    document.getElementById("team-remove-player").addEventListener("change", function () {
+        const teamId = this.value; // Récupérer l'ID de l'équipe sélectionnée
+        fetchPlayersByTeam(teamId); // Mettre à jour les joueurs en fonction de l'équipe sélectionnée
+    });
+});

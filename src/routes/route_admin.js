@@ -152,6 +152,24 @@ router.post("/assign-team", (req, res) => {
     });
 });
 
+// Route pour récupérer toutes les équipes déjà associées à une ligue
+router.get("/all-teams", (req, res) => {
+    const queryTeams = `
+        SELECT t.id, t.name 
+        FROM TEAMS t
+        INNER JOIN TEAM_SEASONS ts ON t.id = ts.team_id
+        WHERE ts.team_id IS NOT NULL
+    `;
+
+    db.query(queryTeams, (err, teams) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des équipes associées à une ligue :", err);
+            return res.status(500).send("Erreur serveur lors de la récupération des équipes.");
+        }
+        res.json(teams); // Retourne toutes les équipes déjà associées à une ligue
+    });
+});
+
 // Récupérer les équipes d'une ligue spécifique
 router.get("/teams-by-league", (req, res) => {
     const leagueId = req.query.leagueId; // Récupérer l'ID de la ligue depuis la query string
@@ -172,6 +190,46 @@ router.get("/teams-by-league", (req, res) => {
             return res.status(500).send("Erreur lors de la récupération des équipes.");
         }
         res.json(teams);
+    });
+});
+
+// Route pour récupérer les joueurs d'une équipe spécifique
+router.get("/players-by-team", (req, res) => {
+    const teamId = req.query.teamId; // Récupérer l'ID de l'équipe depuis la query string
+
+    if (!teamId) {
+        return res.status(400).send("L'ID de l'équipe est requis.");
+    }
+
+    // Requête pour récupérer les joueurs associés à l'équipe
+    const queryPlayersByTeam = `
+        SELECT p.id, p.name, p.firstname, p.lastname 
+        FROM PLAYERS p
+        INNER JOIN TEAM_PLAYERS tp ON p.id = tp.player_id
+        INNER JOIN TEAM_SEASONS ts ON tp.team_season_id = ts.id
+        WHERE ts.team_id = ?;
+    `;
+
+    db.query(queryPlayersByTeam, [teamId], (err, players) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des joueurs de l'équipe :", err);
+            return res.status(500).send("Erreur serveur lors de la récupération des joueurs.");
+        }
+
+        res.json(players); // Retourne les joueurs associés à l'équipe
+    });
+});
+
+// Route pour récupérer tous les joueurs
+router.get("/all-players", (req, res) => {
+    const queryPlayers = "SELECT id, name, firstname, lastname FROM PLAYERS";
+
+    db.query(queryPlayers, (err, players) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des joueurs :", err);
+            return res.status(500).send("Erreur serveur lors de la récupération des joueurs.");
+        }
+        res.json(players); // Retourne la liste des joueurs
     });
 });
 
@@ -205,6 +263,74 @@ router.post("/remove-team", (req, res) => {
         }
 
         res.status(200).send("Association supprimée avec succès !");
+    });
+});
+
+// Route pour ajouter un joueur à une équipe
+router.post("/assign-player", (req, res) => {
+    const { team_id, player_id } = req.body;
+
+    if (!team_id || !player_id) {
+        return res.status(400).send("L'ID de l'équipe et du joueur sont requis.");
+    }
+
+    // Vérification si le joueur est déjà associé à l'équipe
+    const checkTeamPlayerQuery = `
+        SELECT id 
+        FROM TEAM_PLAYERS 
+        WHERE team_season_id = ? AND player_id = ?;
+    `;
+    db.query(checkTeamPlayerQuery, [team_id, player_id], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la vérification de l'association joueur-équipe :", err);
+            return res.status(500).send("Erreur serveur lors de la vérification de l'association.");
+        }
+
+        // Si une association existe déjà, renvoyer un message d'erreur
+        if (result.length > 0) {
+            return res.status(400).send("Ce joueur est déjà associé à cette équipe.");
+        }
+
+        // Sinon, insérer dans TEAM_PLAYERS
+        const insertTeamPlayerQuery = `
+            INSERT INTO TEAM_PLAYERS (team_season_id, player_id) 
+            VALUES (?, ?);
+        `;
+        db.query(insertTeamPlayerQuery, [team_id, player_id], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de l'ajout du joueur à l'équipe :", err);
+                return res.status(500).send("Erreur serveur lors de l'ajout du joueur à l'équipe.");
+            }
+
+            res.status(201).send("Joueur ajouté à l'équipe avec succès !");
+        });
+    });
+});
+
+// Route pour supprimer un joueur d'une équipe
+router.post("/remove-player", (req, res) => {
+    const { team_id, player_id } = req.body;
+
+    if (!team_id || !player_id) {
+        return res.status(400).send("L'ID de l'équipe et du joueur sont requis.");
+    }
+
+    // Supprimer l'association dans la table TEAM_PLAYERS
+    const queryDeletePlayerAssociation = `
+        DELETE FROM TEAM_PLAYERS 
+        WHERE team_season_id = ? AND player_id = ?;
+    `;
+    db.query(queryDeletePlayerAssociation, [team_id, player_id], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la suppression de l'association joueur-équipe :", err);
+            return res.status(500).send("Erreur serveur lors de la suppression de l'association.");
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send("Aucune association trouvée pour ce joueur et cette équipe.");
+        }
+
+        res.status(200).send("Joueur supprimé de l'équipe avec succès !");
     });
 });
 

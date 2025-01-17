@@ -55,6 +55,40 @@
             <button type="submit">Supprimer l'association</button>
         </form>
 
+        <!-- Formulaire pour ajouter un joueur à une équipe -->
+        <form id="assign-player-form">
+            <label for="team-assign-player">Choisir une équipe :</label>
+            <select id="team-assign-player" name="team-assign-player" required>
+                <option value="">Sélectionner une équipe</option>
+                <!-- Les équipes seront injectées ici avec JavaScript -->
+            </select>
+
+            <label for="player-assign">Choisir un joueur :</label>
+            <select id="player-assign" name="player-assign" required>
+                <option value="">Sélectionner un joueur</option>
+                <!-- Les joueurs seront injectés ici avec JavaScript -->
+            </select>
+
+            <button type="submit">Ajouter le joueur à l'équipe</button>
+        </form>
+
+        <!-- Formulaire pour supprimer un joueur d'une équipe -->
+        <form id="remove-player-form">
+            <label for="team-remove-player">Choisir une équipe :</label>
+            <select id="team-remove-player" name="team-remove-player" required>
+                <option value="">Sélectionner une équipe</option>
+                <!-- Les équipes seront injectées ici avec JavaScript -->
+            </select>
+
+            <label for="player-remove">Choisir un joueur :</label>
+            <select id="player-remove" name="player-remove" required>
+                <option value="">Sélectionner un joueur</option>
+                <!-- Les joueurs seront injectés ici avec JavaScript -->
+            </select>
+
+            <button type="submit">Supprimer le joueur de l'équipe</button>
+        </form>
+
         <script src="../js/admin.js"></script>
     </body>
 </html>
