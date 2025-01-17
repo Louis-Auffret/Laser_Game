@@ -13,7 +13,7 @@
 }
 #back:hover {
   cursor: pointer;
-  background-color: rgba(237, 214, 167, 0.1019607843);
+  background-color: var(--color-primary-hover);
 }
 
 input {
@@ -37,28 +37,6 @@ button.default:hover {
   width: 200px;
 }
 
-select {
-  background-color: var(--color-secondary);
-  border: 1px solid var(--color-primary);
-  border-radius: 6px;
-  padding: 6px 20px;
-  cursor: pointer;
-}
-select:hover {
-  background-color: rgba(237, 214, 167, 0.1019607843);
-}
-select option {
-  background-color: var(--color-primary);
-  color: var(--color-secondary);
-  border-radius: 0px;
-}
-select option:hover {
-  background-color: cyan;
-}
-select option:focus {
-  background-color: cyan;
-}
-
 #leagueButtons {
   display: flex;
   flex-direction: row;
@@ -75,7 +53,7 @@ select option:focus {
   background-color: var(--color-primary-bis);
   color: var(--color-secondary);
   border: none;
-  box-shadow: 0px 0px 3px 0, 0, 0, 0.9;
+  box-shadow: inset 2px 3px 6px 0px var(--color-secondary);
 }
 #leagueButtons label {
   background-color: var(--color-secondary);
@@ -122,10 +100,11 @@ select option:focus {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  transition: background-color 300ms;
 }
 #teamList .team:hover {
   cursor: pointer;
-  background-color: rgba(237, 214, 167, 0.1019607843);
+  background-color: var(--color-primary-hover);
 }
 #teamList .team span {
   text-align: center;

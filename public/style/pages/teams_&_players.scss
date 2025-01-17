@@ -13,7 +13,7 @@
 
     &:hover {
         cursor: pointer;
-        background-color: #edd6a71a;
+        background-color: var(--color-primary-hover);
     }
 }
 
@@ -37,35 +37,6 @@ button.default {
 
 #seasonSelect {
     width: 200px;
-}
-
-select {
-    // appearance: none; /* Masquer la flèche native */
-    // -webkit-appearance: none; /* Pour Safari et Chrome */
-    // -moz-appearance: none; /* Pour Firefox */
-    // background-position: right 10px center;
-    background-color: var(--color-secondary);
-    border: 1px solid var(--color-primary);
-    border-radius: 6px;
-    padding: 6px 20px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #edd6a71a;
-    }
-
-    option {
-        background-color: var(--color-primary);
-        color: var(--color-secondary);
-        border-radius: 0px;
-
-        &:hover {
-            background-color: cyan;
-        }
-        &:focus {
-            background-color: cyan;
-        }
-    }
 }
 
 // #leagueButtons {
@@ -108,7 +79,7 @@ select {
         background-color: var(--color-primary-bis);
         color: var(--color-secondary);
         border: none;
-        box-shadow: 0px 0px 3px (0, 0, 0, 0.9);
+        box-shadow: inset 2px 3px 6px 0px var(--color-secondary);
     }
 
     label {
@@ -162,10 +133,11 @@ select {
         justify-content: space-between;
         align-items: center;
         width: 100%;
+        transition: background-color 300ms;
 
         &:hover {
             cursor: pointer;
-            background-color: #edd6a71a;
+            background-color: var(--color-primary-hover);
         }
 
         span {
