@@ -69,9 +69,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const teams = await teamsResponse.json();
     const leagues = await leaguesResponse.json();
 
+    // Trier les équipes par leur nom avant de les ajouter au select
+    const sortedTeams = teams.sort((a, b) => a.name.localeCompare(b.name));
+
     // Peupler le select des équipes pour assigner une équipe à une ligue
     const teamSelectAssign = document.getElementById("team-assign");
-    teams.forEach((team) => {
+    sortedTeams.forEach((team) => {
         const option = document.createElement("option");
         option.value = team.id;
         option.textContent = team.name;
@@ -216,16 +219,20 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
     const teamsResponse = await fetch("http://localhost:3000/admin/all-teams");
     const teams = await teamsResponse.json();
 
+    // Trier les équipes par leur nom
+    const sortedTeams = teams.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+    });
+
     // Vider le select des équipes
     teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
 
-    // Ajouter les équipes au select #team-assign
-    teams.forEach((team) => {
+    // Ajouter les équipes triées au select #team-assign
+    sortedTeams.forEach((team) => {
         const option = document.createElement("option");
         option.value = team.id;
         option.textContent = team.name;
         teamSelectAssign.appendChild(option);
-        teamSelectAssign.appendChild(option.cloneNode(true));
     });
 
     // Mise à jour du select des équipes à supprimer (team-remove)
@@ -235,11 +242,16 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
     const response = await fetch(`http://localhost:3000/admin/teams-by-league?leagueId=${leagueId}`);
     const teamsInLeague = await response.json();
 
+    // Trier les équipes par leur nom
+    const sortedTeamsInLeague = teamsInLeague.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+    });
+
     // Vider le select des équipes
     teamSelectRemove.innerHTML = "<option value=''>Sélectionner une équipe</option>"; // Remettre l'option par défaut
 
-    // Ajouter les équipes restantes dans le select #team-remove
-    teamsInLeague.forEach((team) => {
+    // Ajouter les équipes triées dans le select #team-remove
+    sortedTeamsInLeague.forEach((team) => {
         const option = document.createElement("option");
         option.value = team.id;
         option.textContent = team.name;
