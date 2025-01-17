@@ -106,12 +106,19 @@ document.getElementById("league-remove").addEventListener("change", async (e) =>
         const response = await fetch(`http://localhost:3000/admin/teams-by-league?leagueId=${leagueId}`);
         const teams = await response.json();
 
+        // Trier les équipes par leur nom
+        const sortedTeams = teams.sort((a, b) => {
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
         // Vider le select des équipes
         const teamSelectRemove = document.getElementById("team-remove");
         teamSelectRemove.innerHTML = "<option value=''>Sélectionner une équipe</option>"; // Remettre l'option par défaut
 
-        // Ajouter les équipes au select
-        teams.forEach((team) => {
+        // Ajouter les équipes triées au select
+        sortedTeams.forEach((team) => {
             const option = document.createElement("option");
             option.value = team.id;
             option.textContent = team.name;
@@ -127,8 +134,8 @@ document.getElementById("league-remove").addEventListener("change", async (e) =>
 document.getElementById("assign-team-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const teamId = document.getElementById("team-assign").value; // Utilisation de l'élément avec id "team-assign"
-    const leagueId = document.getElementById("league-assign").value; // Utilisation de l'élément avec id "league-assign"
+    const teamId = document.getElementById("team-assign").value;
+    const leagueId = document.getElementById("league-assign").value;
 
     // Assurez-vous que teamId et leagueId ne sont pas vides
     if (!teamId || !leagueId) {
@@ -244,6 +251,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const assignPlayerForm = document.getElementById("assign-player-form");
     const removePlayerForm = document.getElementById("remove-player-form");
 
+    // Fonction pour trier les objets par le champ 'name'
+    function sortByName(items) {
+        return items.sort((a, b) => {
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+    }
+
     // Fonction pour récupérer les équipes
     function fetchTeams() {
         fetch("http://localhost:3000/admin/all-teams")
@@ -252,12 +270,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 const teamSelectAssign = document.getElementById("team-assign-player");
                 const teamSelectRemove = document.getElementById("team-remove-player");
 
-                // Vider les options existantes
+                const sortedTeams = sortByName(teams);
+
                 teamSelectAssign.innerHTML = '<option value="">Sélectionner une équipe</option>';
                 teamSelectRemove.innerHTML = '<option value="">Sélectionner une équipe</option>';
 
-                // Remplir les options avec les nouvelles équipes
-                teams.forEach((team) => {
+                sortedTeams.forEach((team) => {
                     const optionAssign = document.createElement("option");
                     optionAssign.value = team.id;
                     optionAssign.textContent = team.name;
@@ -277,13 +295,14 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("http://localhost:3000/admin/all-players")
             .then((response) => response.json())
             .then((players) => {
+                console.log("All players fetched:", players);
+
                 const playerAssignSelect = document.getElementById("player-assign");
 
-                // Effacer les anciennes options
-                playerAssignSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+                const sortedPlayers = sortByName(players);
 
-                // Ajouter les joueurs dans la sélection
-                players.forEach((player) => {
+                playerAssignSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+                sortedPlayers.forEach((player) => {
                     const option = document.createElement("option");
                     option.value = player.id;
                     option.textContent = `${player.name} (${player.firstname} ${player.lastname})`;
@@ -299,22 +318,23 @@ document.addEventListener("DOMContentLoaded", () => {
     function fetchPlayersByTeam(teamId) {
         if (!teamId) {
             document.getElementById("player-remove").innerHTML = '<option value="">Sélectionner un joueur</option>';
-            return; // Si aucune équipe n'est sélectionnée, on ne fait rien
+            return;
         }
 
         fetch(`http://localhost:3000/admin/players-by-team?teamId=${teamId}`)
             .then((response) => response.json())
             .then((players) => {
+                console.log("Players fetched for team:", players);
+
                 const playerRemoveSelect = document.getElementById("player-remove");
 
-                // Effacer les anciennes options
-                playerRemoveSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+                const sortedPlayers = sortByName(players);
 
-                // Ajouter les joueurs dans la sélection
-                players.forEach((player) => {
+                playerRemoveSelect.innerHTML = '<option value="">Sélectionner un joueur</option>';
+                sortedPlayers.forEach((player) => {
                     const option = document.createElement("option");
                     option.value = player.id;
-                    option.textContent = `${player.firstname} ${player.lastname} (${player.name})`;
+                    option.textContent = `${player.name} (${player.firstname} ${player.lastname})`;
                     playerRemoveSelect.appendChild(option);
                 });
             })
@@ -345,7 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then((response) => {
                 if (response.ok) {
                     alert("Le joueur a été ajouté à l'équipe !");
-                    assignPlayerForm.reset(); // Réinitialiser le formulaire
+                    assignPlayerForm.reset();
                 } else {
                     response.text().then((message) => alert(message));
                 }
@@ -378,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then((response) => {
                 if (response.ok) {
                     alert("Le joueur a été supprimé de l'équipe !");
-                    removePlayerForm.reset(); // Réinitialiser le formulaire
+                    removePlayerForm.reset();
                 } else {
                     response.text().then((message) => alert(message));
                 }
@@ -389,17 +409,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Ajouter des écouteurs d'événements aux formulaires
     assignPlayerForm.addEventListener("submit", assignPlayerToTeam);
     removePlayerForm.addEventListener("submit", removePlayerFromTeam);
 
-    // Appel de fetchTeams pour récupérer les équipes et fetchAllPlayers pour récupérer tous les joueurs
     fetchTeams();
     fetchAllPlayers();
 
-    // Écouteur d'événements pour la sélection d'équipe dans le formulaire de suppression
     document.getElementById("team-remove-player").addEventListener("change", function () {
-        const teamId = this.value; // Récupérer l'ID de l'équipe sélectionnée
-        fetchPlayersByTeam(teamId); // Mettre à jour les joueurs en fonction de l'équipe sélectionnée
+        const teamId = this.value;
+        fetchPlayersByTeam(teamId);
     });
 });
