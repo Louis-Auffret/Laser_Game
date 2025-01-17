@@ -26,16 +26,32 @@
 
         <form id="assign-team-form">
             <label for="team">Choisissez une équipe :</label>
-            <select id="team" name="team" required>
+            <select id="team-assign" name="team" required>
                 <!-- Les équipes seront injectées ici avec JavaScript -->
             </select>
 
             <label for="league">Choisissez une ligue :</label>
-            <select id="league" name="league" required>
+            <select id="league-assign" name="league" required>
                 <!-- Les ligues seront injectées ici avec JavaScript -->
             </select>
 
             <button type="submit">Attribuer l'équipe à la ligue</button>
+        </form>
+
+        <form id="remove-team-form">
+            <label for="league">Choisir une ligue :</label>
+            <select id="league-remove" name="league">
+                <option value="">Sélectionner une ligue</option>
+                <!-- Options des ligues remplies dynamiquement -->
+            </select>
+
+            <label for="team">Choisir une équipe :</label>
+            <select id="team-remove" name="team">
+                <option value="">Sélectionner une équipe</option>
+                <!-- Options des équipes remplies dynamiquement en fonction de la ligue -->
+            </select>
+
+            <button type="submit">Supprimer l'association</button>
         </form>
 
         <script src="../js/admin.js"></script>

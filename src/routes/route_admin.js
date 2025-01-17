@@ -147,4 +147,27 @@ router.post("/assign-team", (req, res) => {
     });
 });
 
+// Récupérer les équipes d'une ligue spécifique
+router.get("/teams-by-league", (req, res) => {
+    const leagueId = req.query.leagueId; // Récupérer l'ID de la ligue depuis la query string
+
+    if (!leagueId) {
+        return res.status(400).send("L'ID de la ligue est requis.");
+    }
+
+    const query = `
+        SELECT t.id, t.name
+        FROM TEAMS t
+        INNER JOIN TEAM_SEASONS ts ON t.id = ts.team_id
+        WHERE ts.league_id = ?;
+    `;
+
+    db.query(query, [leagueId], (err, teams) => {
+        if (err) {
+            return res.status(500).send("Erreur lors de la récupération des équipes.");
+        }
+        res.json(teams);
+    });
+});
+
 module.exports = router;
