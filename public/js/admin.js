@@ -21,7 +21,7 @@ document.getElementById("add-player-form").addEventListener("submit", async (e) 
             e.target.reset(); // Réinitialiser le formulaire
         } else {
             const errorMessage = await response.text(); // Récupère le message d'erreur du serveur
-            alert(errorMessage); // Affiche le message d'erreur spécifique (ex. pseudo déjà existant)
+            alert(errorMessage); // Affiche le message d'erreur spécifique
         }
     } catch (error) {
         console.error("Erreur lors de l'ajout du joueur :", error);
@@ -62,11 +62,11 @@ document.getElementById("add-team-form").addEventListener("submit", async (e) =>
 document.addEventListener("DOMContentLoaded", async () => {
     // Récupérer la liste des équipes et ligues depuis le serveur
     const [teamsResponse, leaguesResponse] = await Promise.all([
-        fetch("http://localhost:3000/admin/teams"),
+        fetch("http://localhost:3000/admin/teams"), // Cette route renvoie déjà les équipes non associées à une ligue
         fetch("http://localhost:3000/admin/leagues"),
     ]);
 
-    const teams = await teamsResponse.json();
+    const teams = await teamsResponse.json(); // Ce tableau contient uniquement les équipes non associées
     const leagues = await leaguesResponse.json();
 
     // Trier les équipes par leur nom avant de les ajouter au select
@@ -216,15 +216,15 @@ document.getElementById("remove-team-form").addEventListener("submit", async (e)
 async function updateTeamSelectsAfterRemoval(leagueId) {
     // Mise à jour du select des équipes à assigner (team-assign)
     const teamSelectAssign = document.getElementById("team-assign");
-    const teamsResponse = await fetch("http://localhost:3000/admin/all-teams");
+
+    // Récupérer les équipes déjà associées (route /teams)
+    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
     const teams = await teamsResponse.json();
 
-    // Trier les équipes par leur nom
-    const sortedTeams = teams.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-    });
+    // Trier les équipes associées par leur nom
+    const sortedTeams = teams.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Vider le select des équipes
+    // Vider le select des équipes à assigner
     teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
 
     // Ajouter les équipes triées au select #team-assign
@@ -238,19 +238,17 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
     // Mise à jour du select des équipes à supprimer (team-remove)
     const teamSelectRemove = document.getElementById("team-remove");
 
-    // Récupérer les équipes associées à la ligue sélectionnée pour suppression
+    // Récupérer les équipes associées à la ligue sélectionnée pour suppression (route /teams-by-league)
     const response = await fetch(`http://localhost:3000/admin/teams-by-league?leagueId=${leagueId}`);
     const teamsInLeague = await response.json();
 
-    // Trier les équipes par leur nom
-    const sortedTeamsInLeague = teamsInLeague.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-    });
+    // Trier les équipes associées à la ligue par leur nom
+    const sortedTeamsInLeague = teamsInLeague.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Vider le select des équipes
+    // Vider le select des équipes à supprimer
     teamSelectRemove.innerHTML = "<option value=''>Sélectionner une équipe</option>"; // Remettre l'option par défaut
 
-    // Ajouter les équipes triées dans le select #team-remove
+    // Ajouter les équipes associées dans le select #team-remove
     sortedTeamsInLeague.forEach((team) => {
         const option = document.createElement("option");
         option.value = team.id;
