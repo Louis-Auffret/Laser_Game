@@ -1,0 +1,24 @@
+body {
+    padding: 24px;
+}
+
+#add-player-form,
+#add-team-form,
+#assign-team-form,
+#remove-team-form,
+#assign-player-form,
+#remove-player-form {
+    padding: 16px;
+    border: 1px solid var(--color-primary);
+    border-radius: 12px;
+}
+
+#add-team-form,
+#remove-team-form,
+#remove-player-form {
+    margin-bottom: 24px;
+}
+
+h2 {
+    margin-bottom: 12px;
+}

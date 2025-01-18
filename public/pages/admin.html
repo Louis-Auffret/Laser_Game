@@ -9,7 +9,8 @@
         <link rel="stylesheet" href="../style/pages/admin.css" />
     </head>
     <body>
-        <h1>Admin</h1>
+        <!-- <h1>Admin</h1> -->
+        <h2>Nouveaux joueurs et équipes</h2>
 
         <form id="add-player-form">
             <label for="name">Joueur :</label>
@@ -24,6 +25,8 @@
             <input type="text" id="name" name="name" placeholder="Nom de l'équipe" required />
             <button type="submit">Ajouter l'équipe</button>
         </form>
+
+        <h2>Attribution / suppression de relation équipe-ligue</h2>
 
         <form id="assign-team-form">
             <label for="team-assign">Choisissez une équipe :</label>
@@ -54,6 +57,8 @@
 
             <button type="submit">Supprimer l'association</button>
         </form>
+
+        <h2>Ajout joueurs à une équipe</h2>
 
         <!-- Formulaire pour ajouter un joueur à une équipe -->
         <form id="assign-player-form">
