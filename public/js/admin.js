@@ -133,16 +133,16 @@ document.getElementById("league-remove").addEventListener("change", async (e) =>
     }
 });
 
-// Fonction pour assigner une équipe à une ligue
+// Fonction pour associer une équipe à une ligue
 document.getElementById("assign-team-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const teamId = document.getElementById("team-assign").value;
     const leagueId = document.getElementById("league-assign").value;
+    const teamId = document.getElementById("team-assign").value;
 
-    // Assurez-vous que teamId et leagueId ne sont pas vides
-    if (!teamId || !leagueId) {
-        alert("Veuillez sélectionner une équipe et une ligue.");
+    // Vérifiez si une ligue et une équipe ont été sélectionnées
+    if (!leagueId || !teamId) {
+        alert("Veuillez sélectionner une ligue et une équipe.");
         return;
     }
 
@@ -150,30 +150,54 @@ document.getElementById("assign-team-form").addEventListener("submit", async (e)
         const response = await fetch("http://localhost:3000/admin/assign-team", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ team_id: teamId, league_id: leagueId }),
+            body: JSON.stringify({ league_id: leagueId, team_id: teamId }),
         });
 
+        const responseText = await response.text();
+
         if (response.ok) {
-            alert("Équipe attribuée à la ligue avec succès !");
+            alert("Association effectuée avec succès !");
+            console.log("Réponse du serveur:", responseText);
 
-            // Après l'assignation, on met à jour le select des équipes
-            const teamSelectAssign = document.getElementById("team-assign");
+            // Mettre à jour le select des équipes à assigner (team-assign) et de suppression (team-remove) si une ligue est sélectionnée
+            await updateTeamSelectsAfterAssignment();
 
-            // Supprimer l'option de l'équipe assignée
-            const teamOptions = Array.from(teamSelectAssign.options);
-            const teamOptionToRemove = teamOptions.find((option) => option.value === teamId);
-            if (teamOptionToRemove) {
-                teamSelectAssign.removeChild(teamOptionToRemove);
+            // Si une ligue est déjà sélectionnée dans le select #league-remove, on met à jour les options de #team-remove
+            const leagueRemoveSelect = document.getElementById("league-remove");
+            if (leagueRemoveSelect.value) {
+                await updateTeamSelectsAfterRemoval(leagueRemoveSelect.value);
             }
         } else {
-            const errorMessage = await response.text();
-            alert(errorMessage); // Afficher l'erreur du serveur
+            alert("Erreur : " + responseText);
         }
     } catch (error) {
-        console.error("Erreur lors de l'assignation de l'équipe :", error);
-        alert("Erreur lors de l'assignation de l'équipe.");
+        console.error("Erreur lors de l'association de l'équipe :", error);
+        alert("Erreur lors de l'association de l'équipe.");
     }
 });
+
+// Fonction pour mettre à jour les selects après association
+async function updateTeamSelectsAfterAssignment() {
+    const teamSelectAssign = document.getElementById("team-assign");
+
+    // Récupérer les équipes déjà associées (route /teams)
+    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
+    const teams = await teamsResponse.json();
+
+    // Trier les équipes associées par leur nom
+    const sortedTeams = teams.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Vider le select des équipes à assigner
+    teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
+
+    // Ajouter les équipes triées au select #team-assign
+    sortedTeams.forEach((team) => {
+        const option = document.createElement("option");
+        option.value = team.id;
+        option.textContent = team.name;
+        teamSelectAssign.appendChild(option);
+    });
+}
 
 // Fonction pour supprimer l'association équipe-ligue
 document.getElementById("remove-team-form").addEventListener("submit", async (e) => {
