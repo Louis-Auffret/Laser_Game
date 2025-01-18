@@ -13,6 +13,7 @@
         <h2>Nouveaux joueurs et équipes</h2>
 
         <form id="add-player-form">
+            <label for="name">✓</label>
             <label for="name">Joueur :</label>
             <input type="text" name="name" placeholder="Pseudo" required />
             <input type="text" name="firstname" placeholder="Prénom" required />
@@ -21,6 +22,7 @@
         </form>
 
         <form id="add-team-form">
+            <label for="name">✓</label>
             <label for="name">Équipe :</label>
             <input type="text" id="name" name="name" placeholder="Nom de l'équipe" required />
             <button type="submit">Ajouter l'équipe</button>
@@ -29,6 +31,7 @@
         <h2>Attribution / suppression de relation équipe-ligue</h2>
 
         <form id="assign-team-form">
+            <label for="team-assign">✓</label>
             <label for="team-assign">Choisissez une équipe :</label>
             <select id="team-assign" name="team-assign" required>
                 <!-- Les équipes seront injectées ici avec JavaScript -->
@@ -43,6 +46,7 @@
         </form>
 
         <form id="remove-team-form">
+            <label for="league-remove">×</label>
             <label for="league-remove">Choisir une ligue :</label>
             <select id="league-remove" name="league">
                 <option value="">Sélectionner une ligue</option>
@@ -62,6 +66,7 @@
 
         <!-- Formulaire pour ajouter un joueur à une équipe -->
         <form id="assign-player-form">
+            <label for="team-assign-player">✓</label>
             <label for="team-assign-player">Choisir une équipe :</label>
             <select id="team-assign-player" name="team-assign-player" required>
                 <option value="">Sélectionner une équipe</option>
@@ -79,6 +84,7 @@
 
         <!-- Formulaire pour supprimer un joueur d'une équipe -->
         <form id="remove-player-form">
+            <label for="team-remove-player">×</label>
             <label for="team-remove-player">Choisir une équipe :</label>
             <select id="team-remove-player" name="team-remove-player" required>
                 <option value="">Sélectionner une équipe</option>

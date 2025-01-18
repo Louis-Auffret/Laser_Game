@@ -11,12 +11,21 @@ body {
     padding: 16px;
     border: 1px solid var(--color-primary);
     border-radius: 12px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
 }
 
 #add-team-form,
 #remove-team-form,
 #remove-player-form {
     margin-bottom: 24px;
+}
+
+#add-player-form,
+#assign-team-form,
+#assign-player-form {
+    margin-bottom: 12px;
 }
 
 h2 {
