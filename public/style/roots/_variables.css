@@ -1,4 +1,5 @@
 :root {
+    /* V1 */
     --color-primary: #edd6a7;
     --color-primary-bis: #a88851;
     --color-primary-hover: #edd6a71a;
@@ -8,4 +9,11 @@
 
     --color-tertiary: #0ace00;
     --color-tertiary-dark: #078600;
+    --color-quatre: #d9d9d9;
+
+    /* V2 */
+    /* --color-primary: #0ace00;
+    --color-primary-bis: #079100;
+    --color-primary-hover: #0ace001a;
+    --color-primary-focus: #0ace0033; */
 }

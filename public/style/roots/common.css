@@ -5,6 +5,7 @@
     font-family: "Inter", sans-serif;
     color: var(--color-primary);
     font-size: 24px;
+    text-decoration: none;
 }
 
 html,
