@@ -12,14 +12,12 @@
         <div id="loader">
             <img src="../assets/logo.svg" alt="Logo" id="logo" />
         </div>
-        <div id="header">
-            <img src="../assets/logo_complet.svg" alt="" />
-        </div>
+        <my-header></my-header>
         <div id="content" style="display: none">
             <div id="first-row">
                 <div class="col">
-                    <h1>LASER</h1>
-                    <a href="./pages/teams_&_players.html">
+                    <canvas id="laserCanvas" width="500" height="200"></canvas>
+                    <a href="">
                         <div class="img_container">
                             <img
                                 class="illustration"
@@ -49,7 +47,7 @@
             </div>
             <div id="second-row">
                 <div class="col">
-                    <a href="">
+                    <a href="./pages/teams_&_players.html">
                         <div class="img_container">
                             <img
                                 class="illustration"
@@ -92,10 +90,67 @@
                             <img class="photo" src="../assets/Photo_1.jpg" alt="Photo_1" id="Photo_1" />
                         </div>
                     </a>
-                    <h1>GAME</h1>
+                    <!-- <h1>GAME</h1> -->
+                    <canvas id="gameCanvas" width="500" height="200"></canvas>
                 </div>
             </div>
         </div>
+        <script>
+            document.fonts.ready.then(() => {
+                const canvas = document.getElementById("laserCanvas");
+                const ctx = canvas.getContext("2d");
+
+                // Définition des dimensions du canvas
+                canvas.width = 850;
+                canvas.height = 300; // Ajuste selon tes besoins
+
+                // Définition du texte
+                const text = "LASER";
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim();
+                ctx.font = "bold 272px Inter"; // Assurez-vous que la taille correspond
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // Position du texte
+                const x = canvas.width / 2;
+                const y = canvas.height / 2;
+
+                // Transformation scaleY
+                ctx.save();
+                ctx.translate(x, y); // Déplace l'origine au centre du texte
+                ctx.scale(1, 1.475); // Étire verticalement
+                ctx.fillText(text, 0, 18); // Dessine le texte
+                ctx.restore();
+            });
+
+            document.fonts.ready.then(() => {
+                const canvas = document.getElementById("gameCanvas");
+                const ctx = canvas.getContext("2d");
+
+                // Définition des dimensions du canvas
+                canvas.width = 850;
+                canvas.height = 300; // Ajuste selon tes besoins
+
+                // Définition du texte
+                const text = "GAME";
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim();
+                ctx.font = "bold 272px Inter"; // Assurez-vous que la taille correspond
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // Position du texte
+                const x = canvas.width / 2;
+                const y = canvas.height / 2;
+
+                // Transformation scaleY
+                ctx.save();
+                ctx.translate(x, y); // Déplace l'origine au centre du texte
+                ctx.scale(1, 1.45); // Étire verticalement
+                ctx.fillText(text, 0, 16); // Dessine le texte
+                ctx.restore();
+            });
+        </script>
         <script src="../scripts/script.js"></script>
+        <script src="./js/header.js"></script>
     </body>
 </html>

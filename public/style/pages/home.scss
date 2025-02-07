@@ -37,21 +37,6 @@ body {
 }
 //-----
 
-#header {
-    width: 100%;
-    height: 7vh;
-    background-color: var(--color-primary);
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    padding: 0 30px;
-
-    img {
-        max-width: 200px;
-        max-height: 100%;
-    }
-}
-
 #content {
     height: 93vh;
     padding: 24px;
@@ -62,12 +47,14 @@ body {
         transform: scaleY(1.3);
         color: var(--color-primary);
         line-height: 1;
+        z-index: 1;
     }
 
     #first-row {
         height: 35%;
         padding-bottom: 24px;
     }
+
     #second-row {
         height: 65%;
 

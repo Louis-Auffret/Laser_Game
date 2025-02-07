@@ -9,97 +9,101 @@
         <link rel="stylesheet" href="../style/pages/admin.css" />
     </head>
     <body>
+        <my-header></my-header>
         <!-- <h1>Admin</h1> -->
-        <h2>Nouveaux joueurs et équipes</h2>
+        <div id="content">
+            <h2>Nouveaux joueurs et équipes</h2>
 
-        <form id="add-player-form">
-            <label for="name">✓</label>
-            <label for="name">Joueur :</label>
-            <input type="text" name="name" placeholder="Pseudo" required />
-            <input type="text" name="firstname" placeholder="Prénom" required />
-            <input type="text" name="lastname" placeholder="Nom" required />
-            <button type="submit">Ajouter le joueur</button>
-        </form>
+            <form id="add-player-form">
+                <label for="name">✓</label>
+                <label for="name">Joueur :</label>
+                <input type="text" name="name" placeholder="Pseudo" required />
+                <input type="text" name="firstname" placeholder="Prénom" required />
+                <input type="text" name="lastname" placeholder="Nom" required />
+                <button type="submit">Ajouter le joueur</button>
+            </form>
 
-        <form id="add-team-form">
-            <label for="name">✓</label>
-            <label for="name">Équipe :</label>
-            <input type="text" id="name" name="name" placeholder="Nom de l'équipe" required />
-            <button type="submit">Ajouter l'équipe</button>
-        </form>
+            <form id="add-team-form">
+                <label for="name">✓</label>
+                <label for="name">Équipe :</label>
+                <input type="text" id="name" name="name" placeholder="Nom de l'équipe" required />
+                <button type="submit">Ajouter l'équipe</button>
+            </form>
 
-        <h2>Attribution / suppression de relation équipe-ligue</h2>
+            <h2>Attribution / suppression de relation équipe-ligue</h2>
 
-        <form id="assign-team-form">
-            <label for="team-assign">✓</label>
-            <label for="team-assign">Choisissez une équipe :</label>
-            <select id="team-assign" name="team-assign" required>
-                <!-- Les équipes seront injectées ici avec JavaScript -->
-            </select>
+            <form id="assign-team-form">
+                <label for="team-assign">✓</label>
+                <label for="team-assign">Choisissez une équipe :</label>
+                <select id="team-assign" name="team-assign" required>
+                    <!-- Les équipes seront injectées ici avec JavaScript -->
+                </select>
 
-            <label for="league-assign">Choisissez une ligue :</label>
-            <select id="league-assign" name="league-assign" required>
-                <!-- Les ligues seront injectées ici avec JavaScript -->
-            </select>
+                <label for="league-assign">Choisissez une ligue :</label>
+                <select id="league-assign" name="league-assign" required>
+                    <!-- Les ligues seront injectées ici avec JavaScript -->
+                </select>
 
-            <button type="submit">Attribuer l'équipe à la ligue</button>
-        </form>
+                <button type="submit">Attribuer l'équipe à la ligue</button>
+            </form>
 
-        <form id="remove-team-form">
-            <label for="league-remove">×</label>
-            <label for="league-remove">Choisir une ligue :</label>
-            <select id="league-remove" name="league">
-                <option value="">Sélectionner une ligue</option>
-                <!-- Options des ligues remplies dynamiquement -->
-            </select>
+            <form id="remove-team-form">
+                <label for="league-remove">×</label>
+                <label for="league-remove">Choisir une ligue :</label>
+                <select id="league-remove" name="league">
+                    <option value="">Sélectionner une ligue</option>
+                    <!-- Options des ligues remplies dynamiquement -->
+                </select>
 
-            <label for="team-remove">Choisir une équipe :</label>
-            <select id="team-remove" name="team">
-                <option value="">Sélectionner une équipe</option>
-                <!-- Options des équipes remplies dynamiquement en fonction de la ligue -->
-            </select>
+                <label for="team-remove">Choisir une équipe :</label>
+                <select id="team-remove" name="team">
+                    <option value="">Sélectionner une équipe</option>
+                    <!-- Options des équipes remplies dynamiquement en fonction de la ligue -->
+                </select>
 
-            <button type="submit">Supprimer l'association</button>
-        </form>
+                <button type="submit">Supprimer l'association</button>
+            </form>
 
-        <h2>Ajout joueurs à une équipe</h2>
+            <h2>Ajout joueurs à une équipe</h2>
 
-        <!-- Formulaire pour ajouter un joueur à une équipe -->
-        <form id="assign-player-form">
-            <label for="team-assign-player">✓</label>
-            <label for="team-assign-player">Choisir une équipe :</label>
-            <select id="team-assign-player" name="team-assign-player" required>
-                <option value="">Sélectionner une équipe</option>
-                <!-- Les équipes seront injectées ici avec JavaScript -->
-            </select>
+            <!-- Formulaire pour ajouter un joueur à une équipe -->
+            <form id="assign-player-form">
+                <label for="team-assign-player">✓</label>
+                <label for="team-assign-player">Choisir une équipe :</label>
+                <select id="team-assign-player" name="team-assign-player" required>
+                    <option value="">Sélectionner une équipe</option>
+                    <!-- Les équipes seront injectées ici avec JavaScript -->
+                </select>
 
-            <label for="player-assign">Choisir un joueur :</label>
-            <select id="player-assign" name="player-assign" required>
-                <option value="">Sélectionner un joueur</option>
-                <!-- Les joueurs seront injectés ici avec JavaScript -->
-            </select>
+                <label for="player-assign">Choisir un joueur :</label>
+                <select id="player-assign" name="player-assign" required>
+                    <option value="">Sélectionner un joueur</option>
+                    <!-- Les joueurs seront injectés ici avec JavaScript -->
+                </select>
 
-            <button type="submit">Ajouter le joueur à l'équipe</button>
-        </form>
+                <button type="submit" id="test">Ajouter le joueur à l'équipe</button>
+            </form>
 
-        <!-- Formulaire pour supprimer un joueur d'une équipe -->
-        <form id="remove-player-form">
-            <label for="team-remove-player">×</label>
-            <label for="team-remove-player">Choisir une équipe :</label>
-            <select id="team-remove-player" name="team-remove-player" required>
-                <option value="">Sélectionner une équipe</option>
-                <!-- Les équipes seront injectées ici avec JavaScript -->
-            </select>
+            <!-- Formulaire pour supprimer un joueur d'une équipe -->
+            <form id="remove-player-form">
+                <label for="team-remove-player">×</label>
+                <label for="team-remove-player">Choisir une équipe :</label>
+                <select id="team-remove-player" name="team-remove-player" required>
+                    <option value="">Sélectionner une équipe</option>
+                    <!-- Les équipes seront injectées ici avec JavaScript -->
+                </select>
 
-            <label for="player-remove">Choisir un joueur :</label>
-            <select id="player-remove" name="player-remove" required>
-                <option value="">Sélectionner un joueur</option>
-                <!-- Les joueurs seront injectés ici avec JavaScript -->
-            </select>
+                <label for="player-remove">Choisir un joueur :</label>
+                <select id="player-remove" name="player-remove" required>
+                    <option value="">Sélectionner un joueur</option>
+                    <!-- Les joueurs seront injectés ici avec JavaScript -->
+                </select>
 
-            <button type="submit">Supprimer le joueur de l'équipe</button>
-        </form>
+                <button type="submit">Supprimer le joueur de l'équipe</button>
+            </form>
+        </div>
 
         <script src="../js/admin.js"></script>
+        <script src="../js/header.js"></script>
     </body>
 </html>

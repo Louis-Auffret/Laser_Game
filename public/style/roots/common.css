@@ -20,6 +20,44 @@ body {
     flex-direction: column;
 }
 
+header {
+    width: 100%;
+    height: 8vh;
+    background-color: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 30px;
+    z-index: 999;
+}
+
+header img {
+    max-width: 200px;
+    max-height: 100%;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2vw;
+    /* cursor: pointer; */
+}
+
+header nav ul li,
+header nav ul li a {
+    color: var(--color-secondary);
+    text-align: center;
+    cursor: pointer;
+}
+
+header nav ul li.separator {
+    color: var(--color-primary);
+    border-right: 1px solid black;
+    height: 5vh;
+}
+
 ::-webkit-scrollbar {
     width: 10px; /* Largeur de la scrollbar verticale */
     height: 10px; /* Hauteur de la scrollbar horizontale */

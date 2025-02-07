@@ -382,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
 
         const teamId = document.getElementById("team-assign-player").value;
+        // const teamSeasonId = document.getElementById("team-assign-player").value;
         const playerId = document.getElementById("player-assign").value;
 
         if (!teamId || !playerId) {
