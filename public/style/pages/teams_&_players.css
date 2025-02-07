@@ -33,8 +33,17 @@ button.default:hover {
   font-style: italic;
 }
 
+#seasons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2vh;
+}
+
 #seasonSelect {
   width: 200px;
+  margin-top: 1vh;
 }
 
 #leagueButtons {
@@ -43,7 +52,7 @@ button.default:hover {
   width: 100%;
   justify-content: center;
   gap: 24px;
-  padding: 60px;
+  padding: 20px 0 60px 0;
 }
 #leagueButtons input[type=radio] {
   display: none;

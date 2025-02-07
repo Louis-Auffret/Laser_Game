@@ -52,10 +52,21 @@ header nav ul li a {
     cursor: pointer;
 }
 
-header nav ul li.separator {
+header nav ul li:first-of-type {
+    position: relative;
+    padding-left: 50px;
+}
+
+header nav ul li:first-of-type::before {
+    display: block;
+    position: absolute;
+    content: "";
     color: var(--color-primary);
-    border-right: 1px solid black;
-    height: 5vh;
+    border-right: 2px solid black;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 5px;
 }
 
 ::-webkit-scrollbar {

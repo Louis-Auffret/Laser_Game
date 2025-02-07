@@ -5,7 +5,6 @@ class MyHeader extends HTMLElement {
             <nav>
                 <ul>
                     <img src="../../assets/logo_complet.svg" alt="Logo" />
-                    <li class="separator">.</li>
                     <li><a href="/public/home.html">Accueil</a></li>
                     <li><a href="/public/pages/admin.html">Admin</a></li>
                     <li><a href="/public/pages/teams_&_players.html">Classements</a></li>
