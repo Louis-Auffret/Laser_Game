@@ -11,6 +11,12 @@ function loadLeagues() {
                 option.textContent = league.name;
                 selectLeague.appendChild(option);
             });
+
+            // Restaurer la sélection de la ligue
+            const savedLeague = localStorage.getItem("selectedLeague");
+            if (savedLeague) {
+                selectLeague.value = savedLeague;
+            }
         })
         .catch((error) => console.error("Erreur lors du chargement des ligues:", error));
 }
@@ -24,19 +30,18 @@ function generateMatches() {
         return;
     }
 
-    // Récupérer les équipes de la ligue avec la bonne route
+    // Sauvegarde de la ligue sélectionnée
+    localStorage.setItem("selectedLeague", leagueId);
+
     fetch(`http://localhost:3000/tourney/teams-by-league?leagueId=${leagueId}`)
         .then((response) => response.json())
         .then((teams) => {
-            console.log("Équipes reçues :", teams); // Debugging
+            console.log("Équipes reçues :", teams);
 
             if (!teams.length) {
                 alert("Aucune équipe trouvée pour cette ligue.");
                 return;
             }
-
-            // Nettoyer les anciens matchs stockés avant d'en générer de nouveaux
-            localStorage.removeItem("matchups");
 
             const teamNames = teams.map((team) => team.name);
             const teamIds = teams.map((team) => team.id);
@@ -53,31 +58,10 @@ function generateMatches() {
                 }
             }
 
-            // Générer le tableau des matchs
-            const matchesContainer = document.getElementById("matchesContainer");
-            matchesContainer.innerHTML = ""; // Réinitialiser le contenu
+            // Sauvegarder les matchs dans le localStorage
+            localStorage.setItem("matchups", JSON.stringify(matchups));
 
-            const table = document.createElement("table");
-            table.classList.add("matches-table");
-
-            const header = table.createTHead();
-            const headerRow = header.insertRow();
-            headerRow.innerHTML = `
-                <th>Salle 1</th>
-                <th>Salle 2</th>
-            `;
-
-            const tbody = table.createTBody();
-            matchups.forEach((match) => {
-                console.log(`Match: ${match.match}, Team 1 ID: ${match.team1Id}, Team 2 ID: ${match.team2Id}`);
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td><a href="#" onclick="openMatchPage(${match.team1Id}, ${match.team2Id})">${match.match}</a></td>
-                    <td><a href="#" onclick="openMatchPage(${match.team1Id}, ${match.team2Id})">${match.match}</a></td>
-                `;
-            });
-
-            matchesContainer.appendChild(table);
+            displayMatches(matchups);
         })
         .catch((error) => console.error("Erreur lors du chargement des équipes :", error));
 }
@@ -92,25 +76,16 @@ function displayMatches(matchups) {
 
     const header = table.createTHead();
     const headerRow = header.insertRow();
-    headerRow.innerHTML = `<th>Salle 1</th><th>Salle 2</th>`;
+    headerRow.innerHTML = `<th>Salle A</th><th>Salle B</th>`;
 
     const tbody = table.createTBody();
-    for (let i = 0; i < matchups.length; i += 2) {
+    for (let i = 0; i < matchups.length; i++) {
         const row = tbody.insertRow();
-        const match1 = matchups[i];
-        const match2 = matchups[i + 1] || { team1Id: null, team2Id: null, match: "" };
+        const match = matchups[i];
 
         row.innerHTML = `
-            <td>${
-                match1.team1Id && match1.team2Id
-                    ? `<a href="match.html?team1Id=${match1.team1Id}&team2Id=${match1.team2Id}">${match1.match}</a>`
-                    : ""
-            }</td>
-            <td>${
-                match2.team1Id && match2.team2Id
-                    ? `<a href="match.html?team1Id=${match2.team1Id}&team2Id=${match2.team2Id}">${match2.match}</a>`
-                    : ""
-            }</td>
+            <td><a href="match.html?team1Id=${match.team1Id}&team2Id=${match.team2Id}">${match.match}</a></td>
+            <td><a href="match.html?team1Id=${match.team1Id}&team2Id=${match.team2Id}">${match.match}</a></td>
         `;
     }
 
@@ -120,7 +95,7 @@ function displayMatches(matchups) {
 // Charger les matchs depuis le localStorage au rechargement de la page
 function loadStoredMatches() {
     const storedMatchups = JSON.parse(localStorage.getItem("matchups"));
-    if (storedMatchups) {
+    if (storedMatchups && storedMatchups.length > 0) {
         displayMatches(storedMatchups);
     }
 }
