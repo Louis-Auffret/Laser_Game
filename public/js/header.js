@@ -8,7 +8,7 @@ class MyHeader extends HTMLElement {
                     <li><a href="/public/home.html">Accueil</a></li>
                     <li><a href="/public/pages/players.html">Joueurs</a></li>
                     <li><a href="/public/pages/admin.html">Admin</a></li>
-                    <li><a href="/public/pages/teams_&_players.html">Classements</a></li>
+                    <li><a href="/public/pages/rankings.html">Classements</a></li>
                     <li><a href="/public/pages/tourney.html">Tournois</a></li>
                     <li><a href="/public/pages/about.html">A propos</a></li>
                 </ul>
