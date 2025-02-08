@@ -6,7 +6,7 @@ const teamList = document.getElementById("teamList");
 // Fonction pour récupérer et remplir les saisons
 async function fetchSeasons() {
     try {
-        const response = await fetch("http://localhost:3000/players/seasons");
+        const response = await fetch("http://localhost:3000/rankings/seasons");
         if (!response.ok) {
             throw new Error("Erreur lors de la récupération des saisons");
         }
@@ -35,7 +35,7 @@ async function fetchSeasons() {
 async function fetchLeaguesBySeason(seasonId) {
     teamList.innerHTML = ""; // Nettoyer la liste des équipes
     try {
-        const response = await fetch(`http://localhost:3000/players/leagues?seasonId=${seasonId}`);
+        const response = await fetch(`http://localhost:3000/rankings/leagues?seasonId=${seasonId}`);
         if (!response.ok) {
             throw new Error("Erreur lors de la récupération des ligues");
         }
@@ -80,7 +80,7 @@ async function fetchLeaguesBySeason(seasonId) {
 async function fetchTeamsByLeague(leagueId) {
     teamList.innerHTML = ""; // Nettoyer la liste des équipes
     try {
-        const response = await fetch(`http://localhost:3000/players/teams?leagueId=${leagueId}`);
+        const response = await fetch(`http://localhost:3000/rankings/teams?leagueId=${leagueId}`);
         if (!response.ok) {
             throw new Error("Erreur lors de la récupération des équipes");
         }
