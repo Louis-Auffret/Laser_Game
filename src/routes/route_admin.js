@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../config/database");
 
-// Route pour ajouter un joueur
+// Route pour ajouter un joueur ------------------------------------------------------------------------
 router.post("/players", (req, res) => {
     const { firstname, lastname, name } = req.body;
 
@@ -40,7 +40,7 @@ router.post("/players", (req, res) => {
     });
 });
 
-//Route pour ajouter une équipe
+//Route pour ajouter une équipe ------------------------------------------------------------------------
 router.post("/teams", (req, res) => {
     const { name } = req.body;
 
@@ -78,7 +78,7 @@ router.post("/teams", (req, res) => {
     });
 });
 
-// Route pour récupérer les équipes qui ne sont pas encore associées à une ligue
+// Route pour récupérer les équipes qui ne sont pas encore associées à une ligue ------------------------------------------------------------------------
 router.get("/teams", (req, res) => {
     const queryTeams = `
         SELECT t.id, t.name 
@@ -96,7 +96,7 @@ router.get("/teams", (req, res) => {
     });
 });
 
-// Route pour récupérer les ligues
+// Route pour récupérer les ligues ------------------------------------------------------------------------
 router.get("/leagues", (req, res) => {
     const queryLeagues = "SELECT id, name FROM LEAGUES";
 
@@ -109,7 +109,7 @@ router.get("/leagues", (req, res) => {
     });
 });
 
-// Route pour associer une équipe à une ligue
+// Route pour associer une équipe à une ligue ------------------------------------------------------------------------
 router.post("/assign-team", (req, res) => {
     const { team_id, league_id } = req.body;
 
@@ -152,7 +152,7 @@ router.post("/assign-team", (req, res) => {
     });
 });
 
-// Route pour récupérer toutes les équipes déjà associées à une ligue
+// Route pour récupérer toutes les équipes déjà associées à une ligue ------------------------------------------------------------------------
 router.get("/all-teams", (req, res) => {
     const queryTeams = `
         SELECT t.id, t.name 
@@ -170,7 +170,7 @@ router.get("/all-teams", (req, res) => {
     });
 });
 
-// Récupérer les équipes d'une ligue spécifique
+// Récupérer les équipes d'une ligue spécifique ------------------------------------------------------------------------
 router.get("/teams-by-league", (req, res) => {
     const leagueId = req.query.leagueId; // Récupérer l'ID de la ligue depuis la query string
 
@@ -193,7 +193,7 @@ router.get("/teams-by-league", (req, res) => {
     });
 });
 
-// Route pour récupérer les joueurs d'une équipe spécifique
+// Route pour récupérer les joueurs d'une équipe spécifique ------------------------------------------------------------------------
 router.get("/players-by-team", (req, res) => {
     const teamId = req.query.teamId; // Récupérer l'ID de l'équipe depuis la query string
 
@@ -220,7 +220,7 @@ router.get("/players-by-team", (req, res) => {
     });
 });
 
-// Route pour récupérer tous les joueurs
+// Route pour récupérer tous les joueurs ------------------------------------------------------------------------
 router.get("/all-players", (req, res) => {
     const queryPlayers = "SELECT id, name, firstname, lastname FROM PLAYERS";
 
@@ -233,7 +233,7 @@ router.get("/all-players", (req, res) => {
     });
 });
 
-// Route pour supprimer l'association d'une équipe à une ligue
+// Route pour supprimer l'association d'une équipe à une ligue ------------------------------------------------------------------------
 router.post("/remove-team", (req, res) => {
     const { league_id, team_id } = req.body;
 
@@ -266,48 +266,79 @@ router.post("/remove-team", (req, res) => {
     });
 });
 
-// Route pour ajouter un joueur à une équipe
+// Route pour ajouter un joueur à une équipe ------------------------------------------------------------------------
 router.post("/assign-player", (req, res) => {
-    const { team_id, player_id } = req.body;
+    console.log("Corps de la requête :", req.body);
 
-    if (!team_id || !player_id) {
-        return res.status(400).send("L'ID de l'équipe et du joueur sont requis.");
+    const { team_id, player_id, team_season_id } = req.body;
+
+    // Vérification des entrées
+    if (!team_id || !player_id || !team_season_id) {
+        return res.status(400).send("L'ID de l'équipe, du joueur et de la saison d'équipe sont requis.");
     }
 
-    // Vérification si le joueur est déjà associé à l'équipe
-    const checkTeamPlayerQuery = `
-        SELECT id 
-        FROM TEAM_PLAYERS 
-        WHERE team_season_id = ? AND player_id = ?;
+    // Conversion explicite des ID en entiers pour éviter tout problème de type
+    const teamId = parseInt(team_id); // L'ID de l'équipe fourni dans la requête
+    const playerId = parseInt(player_id);
+    const teamSeasonId = parseInt(team_season_id);
+
+    if (isNaN(teamId) || isNaN(playerId) || isNaN(teamSeasonId)) {
+        return res.status(400).send("Les ID doivent être des entiers valides.");
+    }
+
+    // Vérification si le team_season_id appartient bien à l'équipe spécifiée (team_id)
+    const checkTeamSeasonQuery = `
+        SELECT ts.id, ts.team_id
+        FROM TEAM_SEASONS ts
+        WHERE ts.team_id = ? AND ts.id = ?;
     `;
-    db.query(checkTeamPlayerQuery, [team_id, player_id], (err, result) => {
+    db.query(checkTeamSeasonQuery, [teamId, teamSeasonId], (err, result) => {
         if (err) {
-            console.error("Erreur lors de la vérification de l'association joueur-équipe :", err);
-            return res.status(500).send("Erreur serveur lors de la vérification de l'association.");
+            console.error("Erreur lors de la vérification de la saison d'équipe :", err);
+            return res.status(500).send("Erreur serveur lors de la vérification de la saison d'équipe.");
         }
 
-        // Si une association existe déjà, renvoyer un message d'erreur
-        if (result.length > 0) {
-            return res.status(400).send("Ce joueur est déjà associé à cette équipe.");
+        // Si aucun résultat n'est trouvé, cela signifie que le team_season_id ne correspond pas à cette équipe
+        if (result.length === 0) {
+            return res.status(400).send("L'ID de la saison d'équipe n'est pas valide ou ne correspond pas à l'équipe.");
         }
 
-        // Sinon, insérer dans TEAM_PLAYERS
-        const insertTeamPlayerQuery = `
-            INSERT INTO TEAM_PLAYERS (team_season_id, player_id) 
-            VALUES (?, ?);
+        // Vérification si le joueur est déjà associé à cette équipe et saison
+        const checkTeamPlayerQuery = `
+            SELECT * 
+            FROM TEAM_PLAYERS 
+            WHERE team_season_id = ? AND player_id = ?;
         `;
-        db.query(insertTeamPlayerQuery, [team_id, player_id], (err, result) => {
+        db.query(checkTeamPlayerQuery, [teamSeasonId, playerId], (err, result) => {
             if (err) {
-                console.error("Erreur lors de l'ajout du joueur à l'équipe :", err);
-                return res.status(500).send("Erreur serveur lors de l'ajout du joueur à l'équipe.");
+                console.error("Erreur lors de la vérification de l'association joueur-équipe :", err);
+                return res.status(500).send("Erreur serveur lors de la vérification de l'association.");
             }
 
-            res.status(201).send("Joueur ajouté à l'équipe avec succès !");
+            // Si une association existe déjà, renvoyer un message d'erreur
+            if (result.length > 0) {
+                return res.status(400).send("Ce joueur est déjà associé à cette équipe.");
+            }
+
+            // Sinon, insérer dans TEAM_PLAYERS
+            const insertTeamPlayerQuery = `
+                INSERT INTO TEAM_PLAYERS (team_season_id, player_id) 
+                VALUES (?, ?);
+            `;
+            db.query(insertTeamPlayerQuery, [teamSeasonId, playerId], (err, result) => {
+                if (err) {
+                    console.error("Erreur lors de l'ajout du joueur à l'équipe :", err);
+                    return res.status(500).send("Erreur serveur lors de l'ajout du joueur à l'équipe.");
+                }
+
+                // Envoi de la réponse de succès
+                res.status(201).send("Joueur ajouté à l'équipe avec succès !");
+            });
         });
     });
 });
 
-// Route pour supprimer un joueur d'une équipe
+// Route pour supprimer un joueur d'une équipe ------------------------------------------------------------------------
 router.post("/remove-player", (req, res) => {
     const { team_id, player_id } = req.body;
 

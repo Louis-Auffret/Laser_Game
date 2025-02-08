@@ -8,14 +8,14 @@ const app = express();
 app.use(cors());
 
 //Importer Routes :
-const playersRoutes = require("./routes/route_players");
+const rankingsRoutes = require("./routes/route_rankings");
 const tourneyRoutes = require("./routes/route_tourneys");
 const adminRoutes = require("./routes/route_admin");
 
 // Servir le fichier HTML statiquement (index.html)
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json()); // Important pour traiter le JSON
-app.use(express.urlencoded({ extended: true })); // Pour les données envoyées en formulaire
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Test de la base de données
 app.get("/laser_game", (req, res) => {
@@ -30,7 +30,7 @@ app.get("/laser_game", (req, res) => {
 });
 
 // Utiliser les routes
-app.use("/players", playersRoutes);
+app.use("/rankings", rankingsRoutes);
 app.use("/tourney", tourneyRoutes);
 app.use("/admin", adminRoutes);
 
