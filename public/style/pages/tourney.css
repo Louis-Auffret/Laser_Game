@@ -1,25 +1,6 @@
-.matches-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.matches-table th,
-.matches-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.matches-table th {
-  background-color: #f4f4f4;
-}
-
-.matches-table td {
-  background-color: #f9f9f9;
-}
-
 #content {
+  display: flex;
+  flex-direction: column;
   padding: 20px;
 }
 #content #leagueSelect {
@@ -32,18 +13,31 @@
 #content #leagueSelect #selectLeague {
   width: 300px;
 }
-#content #matchesContainer table {
-  border: 1px solid var(--color-primary);
+#content #matchesContainer .matches-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
-#content #matchesContainer table thead tr th {
+#content #matchesContainer .matches-table th,
+#content #matchesContainer .matches-table td {
+  border: 1px solid var(--color-primary);
+  padding: 8px;
+  text-align: center;
+}
+#content #matchesContainer .matches-table tr th {
   background-color: var(--color-primary);
   color: var(--color-secondary);
 }
-#content #matchesContainer table tbody tr td {
+#content #matchesContainer .matches-table td {
   height: 50px;
   background-color: var(--color-secondary);
   cursor: pointer;
 }
-#content #matchesContainer table tbody tr td:hover {
+#content #matchesContainer .matches-table td:hover {
   background-color: var(--color-primary-hover);
+}
+#content #register {
+  margin-top: 20px;
+  align-self: center;
+  width: 200px;
 }/*# sourceMappingURL=tourney.css.map */

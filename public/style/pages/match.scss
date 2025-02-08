@@ -1,0 +1,26 @@
+#matchDetailsContainer {
+    .matches-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            border: 1px solid var(--color-primary);
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+        td {
+            height: 50px;
+            background-color: var(--color-secondary);
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-primary-hover);
+            }
+        }
+    }
+}

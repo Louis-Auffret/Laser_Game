@@ -1,0 +1,22 @@
+#matchDetailsContainer .matches-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#matchDetailsContainer .matches-table th,
+#matchDetailsContainer .matches-table td {
+  border: 1px solid var(--color-primary);
+  padding: 8px;
+  text-align: center;
+}
+#matchDetailsContainer .matches-table th {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+}
+#matchDetailsContainer .matches-table td {
+  height: 50px;
+  background-color: var(--color-secondary);
+  cursor: pointer;
+}
+#matchDetailsContainer .matches-table td:hover {
+  background-color: var(--color-primary-hover);
+}/*# sourceMappingURL=match.css.map */

@@ -61,6 +61,7 @@ header nav ul li:first-of-type::before {
     display: block;
     position: absolute;
     content: "";
+    cursor: default;
     color: var(--color-primary);
     border-right: 2px solid black;
     height: 50px;
