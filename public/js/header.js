@@ -6,6 +6,7 @@ class MyHeader extends HTMLElement {
                 <ul>
                     <img src="../../assets/logo_complet.svg" alt="Logo" />
                     <li><a href="/public/home.html">Accueil</a></li>
+                    <li><a href="/public/pages/players.html">Joueurs</a></li>
                     <li><a href="/public/pages/admin.html">Admin</a></li>
                     <li><a href="/public/pages/teams_&_players.html">Classements</a></li>
                     <li><a href="/public/pages/tourney.html">Tournois</a></li>
