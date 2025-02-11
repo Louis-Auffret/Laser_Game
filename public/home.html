@@ -121,7 +121,7 @@
                 // Définition du texte
                 const text = "LASER";
                 ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim();
-                ctx.font = "bold 272px Inter"; // Assurez-vous que la taille correspond
+                ctx.font = "bold 269px Inter"; // Assurez-vous que la taille correspond
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
@@ -132,8 +132,8 @@
                 // Transformation scaleY
                 ctx.save();
                 ctx.translate(x, y); // Déplace l'origine au centre du texte
-                ctx.scale(1, 1.475); // Étire verticalement
-                ctx.fillText(text, 0, 18); // Dessine le texte
+                ctx.scale(1, 1.48); // Étire verticalement
+                ctx.fillText(text, 0, 17); // Dessine le texte
                 ctx.restore();
             });
 
@@ -159,8 +159,8 @@
                 // Transformation scaleY
                 ctx.save();
                 ctx.translate(x, y); // Déplace l'origine au centre du texte
-                ctx.scale(1, 1.45); // Étire verticalement
-                ctx.fillText(text, 0, 16); // Dessine le texte
+                ctx.scale(1, 1.455); // Étire verticalement
+                ctx.fillText(text, 0, 17); // Dessine le texte
                 ctx.restore();
             });
         </script>

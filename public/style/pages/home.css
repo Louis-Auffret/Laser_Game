@@ -116,6 +116,7 @@ body {
   font-weight: 600;
   font-size: 36px;
   transition: height 0.6s ease;
+  text-align: center;
 }
 #content #first-row .col a .img_div .img_container,
 #content #second-row .col a .img_div .img_container {
