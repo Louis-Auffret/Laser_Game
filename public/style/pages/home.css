@@ -80,82 +80,80 @@ body {
 }
 #content #first-row .col a,
 #content #second-row .col a {
-  flex: 1;
-  border: 1px solid;
-  border-color: var(--color-primary);
-  border-radius: 16px;
-  position: relative;
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
-  transition: background-color font-size 0.6s ease;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
-#content #first-row .col a .img_container,
-#content #second-row .col a .img_container {
-  width: 100%;
-  overflow: hidden;
-  display: relative;
-}
-#content #first-row .col a .img_container .illustration,
-#content #second-row .col a .img_container .illustration {
-  width: 100%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-}
-#content #first-row .col a .img_container .photo,
-#content #second-row .col a .img_container .photo {
-  display: none;
-  width: 100%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-}
-#content #first-row .col a .text_container,
-#content #second-row .col a .text_container {
-  line-height: 1;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
   display: flex;
-  justify-content: start;
-  align-items: end;
-}
-#content #first-row .col a .text_container p,
-#content #second-row .col a .text_container p {
-  font-size: 48px;
-  margin: 0;
-  margin: 0;
-  line-height: 1;
-  text-shadow: 0px 0px 20px rgb(0, 0, 0);
-}
-#content #first-row .col a:hover,
-#content #second-row .col a:hover {
+  flex: 1;
+  border-radius: 24px;
   background-color: var(--color-primary);
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+#content #first-row .col a .img_div,
+#content #second-row .col a .img_div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--color-primary);
+  padding: 4px;
+  border-radius: 16px;
+  color: var(--color-secondary);
+  overflow: hidden;
+}
+#content #first-row .col a .img_div:hover,
+#content #second-row .col a .img_div:hover {
   cursor: pointer;
 }
-#content #first-row .col a:hover .illustration,
-#content #second-row .col a:hover .illustration {
-  display: none;
+#content #first-row .col a .img_div:hover p,
+#content #second-row .col a .img_div:hover p {
+  transition: height 0.6s ease;
+  height: 0px;
 }
-#content #first-row .col a:hover .photo,
-#content #second-row .col a:hover .photo {
-  display: block;
-}
-#content #first-row .col a:hover .text_container,
-#content #second-row .col a:hover .text_container {
-  align-items: center;
-  justify-content: center;
-}
-#content #first-row .col a:hover .text_container p,
-#content #second-row .col a:hover .text_container p {
-  mix-blend-mode: difference;
-  font-size: 80px;
+#content #first-row .col a .img_div p,
+#content #second-row .col a .img_div p {
+  align-content: end;
+  height: 40px;
+  color: var(--color-secondary);
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 36px;
+  transition: height 0.6s ease;
+}
+#content #first-row .col a .img_div .img_container,
+#content #second-row .col a .img_div .img_container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-secondary);
+  border-radius: 16px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+#content #first-row .col a .img_div .img_container:hover .illustration,
+#content #second-row .col a .img_div .img_container:hover .illustration {
+  opacity: 0;
+  transition: opacity 4s ease-out;
+}
+#content #first-row .col a .img_div .img_container:hover .photo,
+#content #second-row .col a .img_div .img_container:hover .photo {
+  opacity: 1;
+  transition: opacity 0.6s ease-in;
+}
+#content #first-row .col a .img_div .img_container .illustration,
+#content #second-row .col a .img_div .img_container .illustration {
+  opacity: 1;
+  width: 100%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  transition: opacity 0.6s ease-in;
+}
+#content #first-row .col a .img_div .img_container .photo,
+#content #second-row .col a .img_div .img_container .photo {
+  opacity: 0;
+  width: 100%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  transition: opacity 0.6s ease-out;
 }/*# sourceMappingURL=home.css.map */
