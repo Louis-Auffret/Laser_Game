@@ -50,6 +50,11 @@ header nav ul li a {
     color: var(--color-secondary);
     text-align: center;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+header nav ul li a:hover {
+    color: var(--color-primary-bis);
 }
 
 header nav ul li:first-of-type {
