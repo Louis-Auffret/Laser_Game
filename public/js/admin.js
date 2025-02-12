@@ -176,30 +176,7 @@ document.getElementById("assign-team-form").addEventListener("submit", async (e)
     }
 });
 
-// Fonction pour mettre à jour les selects après association
-async function updateTeamSelectsAfterAssignment() {
-    const teamSelectAssign = document.getElementById("team-assign");
-
-    // Récupérer les équipes déjà associées (route /teams)
-    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
-    const teams = await teamsResponse.json();
-
-    // Trier les équipes associées par leur nom
-    const sortedTeams = teams.sort((a, b) => a.name.localeCompare(b.name));
-
-    // Vider le select des équipes à assigner
-    teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
-
-    // Ajouter les équipes triées au select #team-assign
-    sortedTeams.forEach((team) => {
-        const option = document.createElement("option");
-        option.value = team.id;
-        option.textContent = team.name;
-        teamSelectAssign.appendChild(option);
-    });
-}
-
-// Fonction pour supprimer l'association équipe-ligue
+// Fonction pour supprimer l'association équipe-ligue ✓
 document.getElementById("remove-team-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -235,6 +212,29 @@ document.getElementById("remove-team-form").addEventListener("submit", async (e)
         alert("Erreur lors de la suppression de l'association.");
     }
 });
+
+// Fonction pour mettre à jour les selects après association
+async function updateTeamSelectsAfterAssignment() {
+    const teamSelectAssign = document.getElementById("team-assign");
+
+    // Récupérer les équipes déjà associées (route /teams)
+    const teamsResponse = await fetch("http://localhost:3000/admin/teams");
+    const teams = await teamsResponse.json();
+
+    // Trier les équipes associées par leur nom
+    const sortedTeams = teams.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Vider le select des équipes à assigner
+    teamSelectAssign.innerHTML = ""; // Retirer toutes les options existantes
+
+    // Ajouter les équipes triées au select #team-assign
+    sortedTeams.forEach((team) => {
+        const option = document.createElement("option");
+        option.value = team.id;
+        option.textContent = team.name;
+        teamSelectAssign.appendChild(option);
+    });
+}
 
 // Fonction pour mettre à jour les selects #team-assign et #team-remove après suppression
 async function updateTeamSelectsAfterRemoval(leagueId) {
@@ -281,11 +281,40 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
     });
 }
 
+// Charger les rôles dans le select
+function loadRoles() {
+    fetch("http://localhost:3000/admin/get-roles")
+        .then((response) => response.json())
+        .then((data) => {
+            const roleSelect = document.getElementById("role-assign");
+
+            // Vider le select avant d'ajouter les nouvelles options
+            roleSelect.innerHTML = "";
+
+            data.forEach((role) => {
+                const option = document.createElement("option");
+                option.value = role.id;
+                option.textContent = role.name;
+
+                // Si le rôle a l'ID 3 ("joueur"), on le sélectionne par défaut
+                if (role.id === 3) {
+                    option.selected = true;
+                }
+
+                roleSelect.appendChild(option);
+            });
+        })
+        .catch((err) => console.error("Erreur lors du chargement des rôles :", err));
+}
+
+// Charger les rôles au chargement de la page
+document.addEventListener("DOMContentLoaded", loadRoles);
+
 document.addEventListener("DOMContentLoaded", () => {
     const assignPlayerForm = document.getElementById("assign-player-form");
     const removePlayerForm = document.getElementById("remove-player-form");
 
-    // Fonction pour trier les objets par le champ 'name'
+    // Fonction pour trier les Joueurs par le champ 'name'
     function sortByName(items) {
         return items.sort((a, b) => {
             const nameA = a.name.toLowerCase();
@@ -296,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Fonction pour récupérer les équipes
+    // Fonction pour récupérer les équipes ✓
     function fetchTeams() {
         fetch("http://localhost:3000/admin/all-teams")
             .then((response) => response.json())
@@ -324,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch((err) => console.error("Erreur lors de la récupération des équipes :", err));
     }
 
-    // Fonction pour récupérer tous les joueurs (pour le select assign-player)
+    // Fonction pour récupérer tous les joueurs (pour le select assign-player) ✓
     function fetchAllPlayers() {
         fetch("http://localhost:3000/admin/all-players")
             .then((response) => response.json())
@@ -348,7 +377,61 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Fonction pour récupérer les joueurs d'une équipe spécifique (pour le select remove-player)
+    // Fonction pour assigner un joueur à une équipe ×
+    function assignPlayerToTeam(event) {
+        event.preventDefault();
+
+        const teamId = document.getElementById("team-assign-player").value;
+        const playerId = document.getElementById("player-assign").value;
+        const roleId = document.getElementById("role-assign").value; // Récupération du rôle sélectionné
+
+        if (!teamId || !playerId || !roleId) {
+            alert("Veuillez sélectionner une équipe, un joueur et un rôle.");
+            return;
+        }
+
+        fetch(`http://localhost:3000/admin/get-team-season?team_id=${teamId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.team_season_id) {
+                    alert("Impossible de récupérer la saison de l'équipe.");
+                    return;
+                }
+
+                const teamSeasonId = data.team_season_id;
+
+                fetch("http://localhost:3000/admin/assign-player", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        team_id: teamId,
+                        player_id: playerId,
+                        team_season_id: teamSeasonId,
+                        role_id: roleId,
+                    }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            alert("Le joueur a été ajouté à l'équipe avec succès !");
+                            document.getElementById("assign-player-form").reset();
+                        } else {
+                            response.text().then((message) => alert(message));
+                        }
+                    })
+                    .catch((err) => {
+                        console.error("Erreur lors de l'assignation du joueur :", err);
+                        alert("Une erreur est survenue.");
+                    });
+            })
+            .catch((err) => {
+                console.error("Erreur lors de la récupération de team_season_id :", err);
+                alert("Erreur serveur.");
+            });
+    }
+
+    // Fonction pour récupérer les joueurs d'une équipe spécifique (pour le select remove-player) ✓
     function fetchPlayersByTeam(teamId) {
         if (!teamId) {
             document.getElementById("player-remove").innerHTML = '<option value="">Sélectionner un joueur</option>';
@@ -377,41 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Fonction pour assigner un joueur à une équipe
-    function assignPlayerToTeam(event) {
-        event.preventDefault();
-
-        const teamId = document.getElementById("team-assign-player").value;
-        // const teamSeasonId = document.getElementById("team-assign-player").value;
-        const playerId = document.getElementById("player-assign").value;
-
-        if (!teamId || !playerId) {
-            alert("Veuillez sélectionner une équipe et un joueur.");
-            return;
-        }
-
-        fetch("http://localhost:3000/admin/assign-player", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ team_id: teamId, player_id: playerId }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    alert("Le joueur a été ajouté à l'équipe !");
-                    assignPlayerForm.reset();
-                } else {
-                    response.text().then((message) => alert(message));
-                }
-            })
-            .catch((err) => {
-                console.error("Erreur lors de l'assignation du joueur :", err);
-                alert("Une erreur est survenue.");
-            });
-    }
-
-    // Fonction pour supprimer un joueur d'une équipe
+    // Fonction pour supprimer un joueur d'une équipe ✓
     function removePlayerFromTeam(event) {
         event.preventDefault();
 

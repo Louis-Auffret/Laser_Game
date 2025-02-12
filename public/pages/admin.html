@@ -61,10 +61,10 @@
                     <!-- Options des équipes remplies dynamiquement en fonction de la ligue -->
                 </select>
 
-                <button type="submit">Supprimer l'association</button>
+                <button type="submit">Supprimer l'équipe de la ligue</button>
             </form>
 
-            <h2>Ajout joueurs à une équipe</h2>
+            <h2>Ajout/suppression de joueurs à une équipe</h2>
 
             <!-- Formulaire pour ajouter un joueur à une équipe -->
             <form id="assign-player-form">
@@ -79,6 +79,12 @@
                 <select id="player-assign" name="player-assign" required>
                     <option value="">Sélectionner un joueur</option>
                     <!-- Les joueurs seront injectés ici avec JavaScript -->
+                </select>
+
+                <label for="role-assign">Choisir un rôle :</label>
+                <select id="role-assign" name="role-assign" required>
+                    <option value="" selected>Sélectionner un rôle</option>
+                    <!-- Les rôles seront injectés ici avec JavaScript -->
                 </select>
 
                 <button type="submit" id="test">Ajouter le joueur à l'équipe</button>

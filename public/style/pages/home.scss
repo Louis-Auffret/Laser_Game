@@ -150,8 +150,6 @@ body {
                             width: 100%;
                             position: absolute;
                             transform: translate(-50%, -50%);
-                            left: 50%;
-                            top: 50%;
                             transition: opacity 0.6s ease-in;
                         }
 
@@ -160,9 +158,17 @@ body {
                             width: 100%;
                             position: absolute;
                             transform: translate(-50%, -50%);
+
+                            transition: opacity 0.6s ease-out;
+                        }
+
+                        .illu1 {
                             left: 50%;
                             top: 50%;
-                            transition: opacity 0.6s ease-out;
+                        }
+                        .illu2 {
+                            left: 50%;
+                            top: 60%;
                         }
                     }
                 }

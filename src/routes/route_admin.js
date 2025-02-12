@@ -270,27 +270,24 @@ router.post("/remove-team", (req, res) => {
 router.post("/assign-player", (req, res) => {
     console.log("Corps de la requête :", req.body);
 
-    const { team_id, player_id, team_season_id } = req.body;
+    const { team_id, player_id, team_season_id, role_id } = req.body;
 
-    // Vérification des entrées
-    if (!team_id || !player_id || !team_season_id) {
-        return res.status(400).send("L'ID de l'équipe, du joueur et de la saison d'équipe sont requis.");
+    if (!team_id || !player_id || !team_season_id || !role_id) {
+        return res.status(400).send("L'ID de l'équipe, du joueur, de la saison d'équipe et du rôle sont requis.");
     }
 
-    // Conversion explicite des ID en entiers pour éviter tout problème de type
-    const teamId = parseInt(team_id); // L'ID de l'équipe fourni dans la requête
+    const teamId = parseInt(team_id);
     const playerId = parseInt(player_id);
     const teamSeasonId = parseInt(team_season_id);
+    const roleId = parseInt(role_id);
 
-    if (isNaN(teamId) || isNaN(playerId) || isNaN(teamSeasonId)) {
+    if (isNaN(teamId) || isNaN(playerId) || isNaN(teamSeasonId) || isNaN(roleId)) {
         return res.status(400).send("Les ID doivent être des entiers valides.");
     }
 
-    // Vérification si le team_season_id appartient bien à l'équipe spécifiée (team_id)
+    // Vérifier que le team_season_id appartient bien à l'équipe
     const checkTeamSeasonQuery = `
-        SELECT ts.id, ts.team_id
-        FROM TEAM_SEASONS ts
-        WHERE ts.team_id = ? AND ts.id = ?;
+        SELECT id FROM TEAM_SEASONS WHERE team_id = ? AND id = ?;
     `;
     db.query(checkTeamSeasonQuery, [teamId, teamSeasonId], (err, result) => {
         if (err) {
@@ -298,16 +295,13 @@ router.post("/assign-player", (req, res) => {
             return res.status(500).send("Erreur serveur lors de la vérification de la saison d'équipe.");
         }
 
-        // Si aucun résultat n'est trouvé, cela signifie que le team_season_id ne correspond pas à cette équipe
         if (result.length === 0) {
-            return res.status(400).send("L'ID de la saison d'équipe n'est pas valide ou ne correspond pas à l'équipe.");
+            return res.status(400).send("L'ID de la saison d'équipe est invalide ou ne correspond pas à l'équipe.");
         }
 
-        // Vérification si le joueur est déjà associé à cette équipe et saison
+        // Vérifier si le joueur est déjà associé à l'équipe pour cette saison
         const checkTeamPlayerQuery = `
-            SELECT * 
-            FROM TEAM_PLAYERS 
-            WHERE team_season_id = ? AND player_id = ?;
+            SELECT * FROM TEAM_PLAYERS WHERE team_season_id = ? AND player_id = ?;
         `;
         db.query(checkTeamPlayerQuery, [teamSeasonId, playerId], (err, result) => {
             if (err) {
@@ -315,26 +309,67 @@ router.post("/assign-player", (req, res) => {
                 return res.status(500).send("Erreur serveur lors de la vérification de l'association.");
             }
 
-            // Si une association existe déjà, renvoyer un message d'erreur
             if (result.length > 0) {
                 return res.status(400).send("Ce joueur est déjà associé à cette équipe.");
             }
 
-            // Sinon, insérer dans TEAM_PLAYERS
+            // Insérer le joueur dans TEAM_PLAYERS avec le rôle
             const insertTeamPlayerQuery = `
-                INSERT INTO TEAM_PLAYERS (team_season_id, player_id) 
-                VALUES (?, ?);
+                INSERT INTO TEAM_PLAYERS (team_season_id, player_id, role_id) 
+                VALUES (?, ?, ?);
             `;
-            db.query(insertTeamPlayerQuery, [teamSeasonId, playerId], (err, result) => {
+            db.query(insertTeamPlayerQuery, [teamSeasonId, playerId, roleId], (err, result) => {
                 if (err) {
                     console.error("Erreur lors de l'ajout du joueur à l'équipe :", err);
                     return res.status(500).send("Erreur serveur lors de l'ajout du joueur à l'équipe.");
                 }
 
-                // Envoi de la réponse de succès
                 res.status(201).send("Joueur ajouté à l'équipe avec succès !");
             });
         });
+    });
+});
+
+router.get("/get-team-season", (req, res) => {
+    const { team_id } = req.query;
+
+    if (!team_id) {
+        return res.status(400).send("L'ID de l'équipe est requis.");
+    }
+
+    const query = `
+        SELECT id AS team_season_id 
+        FROM TEAM_SEASONS 
+        WHERE team_id = ? 
+        ORDER BY id DESC 
+        LIMIT 1;
+    `;
+
+    db.query(query, [team_id], (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la récupération de la saison d'équipe :", err);
+            return res.status(500).send("Erreur serveur.");
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Aucune saison trouvée pour cette équipe." });
+        }
+
+        res.json(result[0]);
+    });
+});
+
+// Route pour récupérer les rôles ------------------------------------------------------------------------
+router.get("/get-roles", (req, res) => {
+    const query = "SELECT id, name FROM ROLES ORDER BY name ASC";
+
+    db.query(query, (err, result) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des rôles :", err);
+            return res.status(500).send("Erreur serveur.");
+        }
+
+        res.json(result);
     });
 });
 
