@@ -96,6 +96,24 @@ router.get("/teams", (req, res) => {
     });
 });
 
+// Route pour récupérer les joueurs qui ne sont pas encore associées à une équipe ------------------------------------------------------------------------
+router.get("/unassigned-players", (req, res) => {
+    const queryPlayers = `
+        SELECT p.id, p.name 
+        FROM PLAYERS p
+        LEFT JOIN TEAM_PLAYERS tp ON p.id = tp.player_id
+        WHERE tp.player_id IS NULL
+    `;
+
+    db.query(queryPlayers, (err, players) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des joueurs non associés :", err);
+            return res.status(500).send("Erreur serveur lors de la récupération des joueurs.");
+        }
+        res.json(players); // Retourne uniquement les joueurs qui ne sont pas associés à une équipe
+    });
+});
+
 // Route pour récupérer les ligues ------------------------------------------------------------------------
 router.get("/leagues", (req, res) => {
     const queryLeagues = "SELECT id, name FROM LEAGUES";

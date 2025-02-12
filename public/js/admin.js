@@ -241,7 +241,7 @@ async function updateTeamSelectsAfterRemoval(leagueId) {
     // Mise à jour du select des équipes à assigner (team-assign)
     const teamSelectAssign = document.getElementById("team-assign");
 
-    // Récupérer les équipes déjà associées (route /teams)
+    // Récupérer les équipes pas encore associées (route /teams)
     const teamsResponse = await fetch("http://localhost:3000/admin/teams");
     const teams = await teamsResponse.json();
 
@@ -355,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour récupérer tous les joueurs (pour le select assign-player) ✓
     function fetchAllPlayers() {
-        fetch("http://localhost:3000/admin/all-players")
+        fetch("http://localhost:3000/admin/unassigned-players")
             .then((response) => response.json())
             .then((players) => {
                 console.log("All players fetched:", players);

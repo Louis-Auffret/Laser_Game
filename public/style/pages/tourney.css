@@ -29,10 +29,17 @@
   color: var(--color-secondary);
 }
 #content #matchesContainer .matches-table td {
-  height: 50px;
+  height: 60px;
   width: 50%;
   background-color: var(--color-secondary);
+}
+#content #matchesContainer .matches-table td a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  width: 100%;
+  height: 100%;
 }
 #content #matchesContainer .matches-table td:hover {
   background-color: var(--color-primary-hover);
