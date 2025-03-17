@@ -102,16 +102,32 @@ header nav ul li:first-of-type::before {
 }
 
 select {
-    /* appearance: none;  */
-    /* -webkit-appearance: none;  */
-    /* -moz-appearance: none;  */
-    /* background-position: right 10px center; */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background-color: var(--color-secondary);
     border: 1px solid var(--color-primary);
     border-radius: 6px;
-    padding: 6px 16px;
+    padding: 6px 40px 6px 16px;
+    text-overflow: ellipsis;
     cursor: pointer;
     transition: background-color 300ms;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown:after {
+    content: "▼";
+    position: absolute;
+    font-size: 20px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-primary);
+    pointer-events: none;
 }
 
 select:hover {
